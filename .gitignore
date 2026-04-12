@@ -1,0 +1,10 @@
+node_modules/
+.plasmo/
+build/
+.env.local
+*.zip
+*.png
+!assets/*.png
+.idea/
+.claude/
+supabase/.temp/
