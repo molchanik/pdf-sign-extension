@@ -17,7 +17,7 @@ export async function checkSignLimit(
   if (error) {
     // On network error, allow the sign (graceful degradation)
     console.warn("check-limit failed, allowing sign:", error)
-    return { allowed: true, isPro: false, used: 0, limit: 3 }
+    return { allowed: true, isPro: false, used: 0, limit: 1 }
   }
 
   return data as SignLimitResult

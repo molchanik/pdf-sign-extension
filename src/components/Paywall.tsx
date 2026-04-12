@@ -18,7 +18,7 @@ export function Paywall({ used, limit, onClose }: Props) {
             Free limit reached
           </h2>
           <p className="text-sm text-gray-500 mb-4">
-            {used}/{limit} free signs used this month
+            Your free file has been used. Upgrade to Pro for unlimited signing.
           </p>
 
           <div className="bg-blue-50 rounded-lg p-3 mb-4 text-left">

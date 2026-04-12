@@ -1,32 +1,36 @@
 import { createClient } from "@supabase/supabase-js"
 
-const ANON_ID_KEY = "pdf_sign_anon_id"
-
 export const supabase = createClient(
   process.env.PLASMO_PUBLIC_SUPABASE_URL!,
   process.env.PLASMO_PUBLIC_SUPABASE_ANON_KEY!
 )
 
 /**
- * Generate a stable anonymous ID using crypto.randomUUID().
- * Stored in chrome.storage.local (not localStorage — popup has no persistent localStorage).
- */
-export async function getAnonymousId(): Promise<string> {
-  const result = await chrome.storage.local.get(ANON_ID_KEY)
-  if (result[ANON_ID_KEY]) return result[ANON_ID_KEY]
-
-  const id = crypto.randomUUID()
-  await chrome.storage.local.set({ [ANON_ID_KEY]: id })
-  return id
-}
-
-/**
- * Return Supabase user ID if logged in, otherwise anonymous ID.
+ * Return Supabase user ID. Requires Google sign-in.
+ * Throws if not authenticated.
  */
 export async function getUserId(): Promise<string> {
   const { data } = await supabase.auth.getSession()
-  if (data.session?.user?.id) return data.session.user.id
-  return getAnonymousId()
+  if (!data.session?.user?.id) {
+    throw new Error("Not authenticated")
+  }
+  return data.session.user.id
+}
+
+/**
+ * Check if user is currently signed in.
+ */
+export async function isAuthenticated(): Promise<boolean> {
+  const { data } = await supabase.auth.getSession()
+  return !!data.session?.user
+}
+
+/**
+ * Get user email if signed in.
+ */
+export async function getUserEmail(): Promise<string | null> {
+  const { data } = await supabase.auth.getSession()
+  return data.session?.user?.email ?? null
 }
 
 export async function signInWithGoogle(): Promise<void> {

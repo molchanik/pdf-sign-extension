@@ -122,7 +122,7 @@ export function EditorSidebar({
         <LocalBadge />
         {!isPro && (
           <div className="mt-2 text-xs text-gray-500 bg-gray-50 rounded p-2 text-center">
-            Free: {used}/{limit} signatures this month
+            {used >= limit ? "Free file used" : `${limit - used} free file remaining`}
           </div>
         )}
       </div>
