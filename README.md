@@ -8,10 +8,10 @@ Chrome extension for signing PDF documents locally. Your file never leaves your 
 - **Multiple signatures** — draw new or pick from saved library, place on any page
 - **Text fields** — name, date, custom text with font/size/color/bold/italic formatting
 - **Drag & resize** — move and scale any element with corner handles
-- **6 fonts** — Helvetica, Times, Courier (standard PDF) + Roboto, Open Sans, Dancing Script (embedded TTF)
+- **5 fonts** — Helvetica, Times, Courier (Latin only) + Roboto, Open Sans (Latin, Cyrillic, Greek)
 - **Pen width presets** — Fine, Medium, Thick, Marker
 - **100% local** — all processing happens in browser memory, no server upload
-- **Freemium** — 3 free signs/month, Pro for unlimited (via ExtensionPay)
+- **Freemium** — 1 free file, then Pro $2.99/mo or $29.99/yr (via ExtensionPay)
 
 ## Tech Stack
 
@@ -22,7 +22,7 @@ Chrome extension for signing PDF documents locally. Your file never leaves your 
 | PDF read   | pdfjs-dist (PDF.js)                   |
 | PDF write  | pdf-lib + @pdf-lib/fontkit            |
 | Signatures | signature_pad                         |
-| Auth       | Supabase (OAuth + anonymous ID)       |
+| Auth       | Supabase (Google OAuth)                |
 | Payments   | ExtensionPay                          |
 
 ## Project Structure
@@ -56,7 +56,7 @@ src/
 │   ├── types.ts                 # Shared TypeScript types
 │   ├── storage.ts               # chrome.storage wrapper (multi-sig)
 │   ├── signature-trim.ts        # Canvas transparent edge trimming
-│   ├── auth.ts                  # Supabase auth + anonymous ID
+│   ├── auth.ts                  # Supabase auth (Google OAuth)
 │   ├── counter.ts               # Freemium usage counter
 │   └── payments.ts              # ExtensionPay integration
 └── styles/globals.css           # Tailwind + custom utilities
@@ -83,6 +83,7 @@ Copy `.env.local` and fill in your Supabase credentials:
 ```
 PLASMO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 PLASMO_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+PLASMO_PUBLIC_EXTPAY_ID=your-extension-id
 ```
 
 ### Database
@@ -98,7 +99,6 @@ Run the migration in Supabase SQL Editor:
 ```bash
 supabase functions deploy check-limit
 supabase functions deploy sign-count
-supabase functions deploy verify-sub
 ```
 
 ### Build
