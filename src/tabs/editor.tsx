@@ -9,6 +9,7 @@ import { ScrollablePdfViewer, type PageInfo } from "~components/ScrollablePdfVie
 import { getUserId, getUserEmail, isAuthenticated, signInWithGoogle } from "~lib/auth"
 import { checkSignLimit, incrementSignCount } from "~lib/counter"
 import { registerPreviewFonts } from "~lib/fonts"
+import { checkProStatus } from "~lib/payments"
 import { downloadSignedPdf, signPdf, type ElementInput } from "~lib/pdf-signer"
 import type { ActiveMode, PlacedElement, SavedSignature, SignatureElement, TextElement } from "~lib/types"
 
@@ -197,8 +198,16 @@ function Editor() {
     setAppState("signing")
 
     try {
-      const userId = await getUserId()
-      const limitResult = await checkSignLimit(userId)
+      // Check ExtensionPay first — if paid, skip Supabase limit check
+      const proStatus = await checkProStatus()
+
+      let limitResult = { allowed: true, isPro: proStatus.paid, used: 0, limit: 1 }
+
+      if (!proStatus.paid) {
+        const userId = await getUserId()
+        limitResult = await checkSignLimit(userId)
+      }
+
       setUsed(limitResult.used)
       setLimit(limitResult.limit)
       setIsPro(limitResult.isPro)
@@ -241,12 +250,14 @@ function Editor() {
       const signed = await signPdf({
         pdfBytes,
         elements: inputs,
-        addWatermark: !limitResult.isPro,
       })
 
       downloadSignedPdf(signed, fileName)
-      await incrementSignCount(userId)
-      setUsed(limitResult.used + 1)
+      if (!limitResult.isPro) {
+        const userId = await getUserId()
+        await incrementSignCount(userId)
+        setUsed(limitResult.used + 1)
+      }
       setAppState("done")
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Signing failed"

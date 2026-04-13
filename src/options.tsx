@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 
 import { getSession, signInWithGoogle, signOut } from "~lib/auth"
-import { checkProStatus, openUpgradePage } from "~lib/payments"
+import { checkProStatus, openUpgradePage, type ProStatus } from "~lib/payments"
 import { deleteSignature, loadSignature } from "~lib/storage"
 
 import "~styles/globals.css"
@@ -9,12 +9,12 @@ import "~styles/globals.css"
 export default function Options() {
   const [savedSig, setSavedSig] = useState<string | null>(null)
   const [email, setEmail] = useState<string | null>(null)
-  const [isPro, setIsPro] = useState(false)
+  const [proStatus, setProStatus] = useState<ProStatus | null>(null)
 
   useEffect(() => {
     loadSignature().then(setSavedSig)
     getSession().then((s) => setEmail(s?.user?.email ?? null))
-    checkProStatus().then(setIsPro)
+    checkProStatus().then(setProStatus)
   }, [])
 
   const handleDeleteSignature = async () => {
@@ -86,20 +86,28 @@ export default function Options() {
         <h2 className="text-sm font-semibold text-gray-700 mb-2">
           Subscription
         </h2>
-        <p className="text-sm text-gray-600">
-          {isPro ? (
-            <span className="text-blue-600 font-medium">
-              Pro — Unlimited signatures
-            </span>
+        <div className="text-sm text-gray-600">
+          {proStatus?.paid ? (
+            <div>
+              <span className="text-blue-600 font-medium">Pro — Unlimited files</span>
+              {proStatus.subscriptionCancelAt && (
+                <p className="text-xs text-gray-400 mt-1">
+                  Active until {new Date(proStatus.subscriptionCancelAt).toLocaleDateString()}
+                </p>
+              )}
+              <button onClick={openUpgradePage} className="text-xs text-gray-400 hover:underline mt-1 block">
+                Manage subscription
+              </button>
+            </div>
           ) : (
             <span>
-              Free — 3 signatures/month.{" "}
+              Free — 1 file.{" "}
               <button onClick={openUpgradePage} className="text-blue-500 hover:underline">
                 Upgrade to Pro
               </button>
             </span>
           )}
-        </p>
+        </div>
       </section>
     </div>
   )

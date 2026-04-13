@@ -1,46 +1,38 @@
-/**
- * ExtensionPay integration for Chrome Extension payments.
- * ExtensionPay is loaded as a content script — the global `extPay` object
- * is injected by their library. This module provides typed wrappers.
- *
- * Setup: add ExtensionPay script to manifest via Plasmo config.
- * See https://extensionpay.com for integration docs.
- */
+import ExtPay from "extpay"
 
-declare const ExtPay: (id: string) => ExtPayInstance
+const EXTPAY_ID = process.env.PLASMO_PUBLIC_EXTPAY_ID || "pdf-sign"
 
-interface ExtPayInstance {
-  openPaymentPage: () => void
-  getUser: () => Promise<{ paid: boolean; paidAt?: string; trialStartedAt?: string }>
-  onPaid: { addListener: (cb: (user: { paid: boolean }) => void) => void }
-}
+let extPayInstance: ReturnType<typeof ExtPay> | null = null
 
-let extPayInstance: ExtPayInstance | null = null
-
-function getExtPay(): ExtPayInstance {
+function getExtPay() {
   if (!extPayInstance) {
-    extPayInstance = ExtPay(process.env.PLASMO_PUBLIC_EXTPAY_ID || "pdf-sign")
+    extPayInstance = ExtPay(EXTPAY_ID)
   }
   return extPayInstance
 }
 
 export function openUpgradePage(): void {
-  try {
-    getExtPay().openPaymentPage()
-  } catch {
-    // Fallback: open ExtensionPay page directly
-    chrome.tabs.create({
-      url: "https://extensionpay.com/extension/pdf-sign"
-    })
-  }
+  getExtPay().openPaymentPage()
 }
 
-export async function checkProStatus(): Promise<boolean> {
+export interface ProStatus {
+  paid: boolean
+  paidAt: Date | null
+  subscriptionCancelAt: Date | null
+  subscriptionStatus?: "active" | "past_due" | "canceled"
+}
+
+export async function checkProStatus(): Promise<ProStatus> {
   try {
     const user = await getExtPay().getUser()
-    return user.paid
+    return {
+      paid: user.paid,
+      paidAt: user.paidAt,
+      subscriptionCancelAt: user.subscriptionCancelAt ?? null,
+      subscriptionStatus: user.subscriptionStatus,
+    }
   } catch {
-    return false
+    return { paid: false, paidAt: null, subscriptionCancelAt: null }
   }
 }
 

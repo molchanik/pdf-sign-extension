@@ -33,7 +33,6 @@ export type ElementInput = SignElementInput | TextElementInput
 export interface SignOptions {
   pdfBytes: ArrayBuffer
   elements: ElementInput[]
-  addWatermark: boolean
 }
 
 function hexToRgb(hex: string) {
@@ -100,13 +99,6 @@ export async function signPdf(opts: SignOptions): Promise<Uint8Array> {
         lineHeight: el.fontSize * 1.3,
       })
     }
-  }
-
-  if (opts.addWatermark) {
-    const lastPage = pages[pages.length - 1]
-    lastPage.drawText("Signed with PDF Sign \u2014 pdfsign.app", {
-      x: 40, y: 18, size: 7, color: rgb(0.6, 0.6, 0.6),
-    })
   }
 
   return pdfDoc.save()

@@ -23,13 +23,11 @@ export function Paywall({ used, limit, onClose }: Props) {
 
           <div className="bg-blue-50 rounded-lg p-3 mb-4 text-left">
             <p className="text-sm font-medium text-blue-900 mb-1">
-              Pro — $4.99/mo
+              Pro — $2.99/mo or $29.99/yr
             </p>
             <ul className="text-xs text-blue-700 space-y-0.5">
-              <li>&#x2713; Unlimited signatures</li>
-              <li>&#x2713; No watermark</li>
-              <li>&#x2713; Text signatures with custom fonts</li>
-              <li>&#x2713; Signature history</li>
+              <li>&#x2713; Unlimited files</li>
+              <li>&#x2713; All fonts</li>
             </ul>
           </div>
 

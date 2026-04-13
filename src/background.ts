@@ -7,6 +7,11 @@
  * - Background tasks that don't need the popup open
  */
 
+import ExtPay from "extpay"
+
+const extpay = ExtPay(process.env.PLASMO_PUBLIC_EXTPAY_ID || "pdf-sign")
+extpay.startBackground()
+
 export {}
 
 // Keep service worker alive for auth callbacks
