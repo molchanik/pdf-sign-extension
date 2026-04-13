@@ -1,0 +1,4 @@
+// Minimal 1x1 transparent PNG as base64 data URL
+// Generated from the PNG spec: IHDR(1x1, RGBA) + empty IDAT + IEND
+export const MINIMAL_PNG_DATA_URL =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQI12NgAAIABQABNjN9GQAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAAA0lEQVQI12P4z8BQDwAEgAF/QualzQAAAABJRU5ErkJggg=="
