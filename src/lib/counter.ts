@@ -7,15 +7,10 @@ export interface SignLimitResult {
   limit: number
 }
 
-export async function checkSignLimit(
-  userId: string
-): Promise<SignLimitResult> {
-  const { data, error } = await supabase.functions.invoke("check-limit", {
-    body: { user_id: userId }
-  })
+export async function checkSignLimit(): Promise<SignLimitResult> {
+  const { data, error } = await supabase.functions.invoke("check-limit")
 
   if (error) {
-    // On network error, allow the sign (graceful degradation)
     console.warn("check-limit failed, allowing sign:", error)
     return { allowed: true, isPro: false, used: 0, limit: 1 }
   }
@@ -23,10 +18,8 @@ export async function checkSignLimit(
   return data as SignLimitResult
 }
 
-export async function incrementSignCount(userId: string): Promise<void> {
-  const { error } = await supabase.functions.invoke("sign-count", {
-    body: { user_id: userId }
-  })
+export async function incrementSignCount(): Promise<void> {
+  const { error } = await supabase.functions.invoke("sign-count")
 
   if (error) {
     console.warn("sign-count increment failed:", error)

@@ -36,10 +36,3 @@ export async function checkProStatus(): Promise<ProStatus> {
   }
 }
 
-export function onPaymentComplete(callback: () => void): void {
-  try {
-    getExtPay().onPaid.addListener(() => callback())
-  } catch {
-    // ExtensionPay not loaded
-  }
-}

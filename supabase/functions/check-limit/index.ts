@@ -13,38 +13,42 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { user_id } = await req.json()
-    if (!user_id) {
+    const authHeader = req.headers.get("authorization")
+    if (!authHeader) {
       return new Response(
-        JSON.stringify({ error: "user_id required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: "Missing authorization header" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       )
     }
+
+    // Verify the JWT and extract user ID server-side
+    const supabaseAuth = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!
+    )
+    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser(
+      authHeader.replace("Bearer ", "")
+    )
+
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: "Invalid token" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      )
+    }
+
+    const userId = user.id
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     )
 
-    // Check active subscription first
-    const { data: sub } = await supabase
-      .from("subscriptions")
-      .select("status")
-      .eq("user_id", user_id)
-      .single()
-
-    if (sub?.status === "active") {
-      return new Response(
-        JSON.stringify({ allowed: true, isPro: true, used: 0, limit: FREE_LIMIT }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      )
-    }
-
-    // Count total usage across all months (not per-month)
+    // Count total usage across all months
     const { data: usage } = await supabase
       .from("sign_usage")
       .select("count")
-      .eq("user_id", user_id)
+      .eq("user_id", userId)
 
     const totalCount = (usage || []).reduce((sum, row) => sum + (row.count || 0), 0)
 

@@ -6,7 +6,7 @@ import { FileDropzone } from "~components/FileDropzone"
 import { OverlayElement } from "~components/OverlayElement"
 import { Paywall } from "~components/Paywall"
 import { ScrollablePdfViewer, type PageInfo } from "~components/ScrollablePdfViewer"
-import { getUserId, getUserEmail, isAuthenticated, signInWithGoogle } from "~lib/auth"
+import { getUserEmail, isAuthenticated, signInWithGoogle } from "~lib/auth"
 import { checkSignLimit, incrementSignCount } from "~lib/counter"
 import { registerPreviewFonts } from "~lib/fonts"
 import { checkProStatus } from "~lib/payments"
@@ -204,8 +204,7 @@ function Editor() {
       let limitResult = { allowed: true, isPro: proStatus.paid, used: 0, limit: 1 }
 
       if (!proStatus.paid) {
-        const userId = await getUserId()
-        limitResult = await checkSignLimit(userId)
+        limitResult = await checkSignLimit()
       }
 
       setUsed(limitResult.used)
@@ -254,8 +253,7 @@ function Editor() {
 
       downloadSignedPdf(signed, fileName)
       if (!limitResult.isPro) {
-        const userId = await getUserId()
-        await incrementSignCount(userId)
+        await incrementSignCount()
         setUsed(limitResult.used + 1)
       }
       setAppState("done")

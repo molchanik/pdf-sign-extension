@@ -72,39 +72,3 @@ export class PdfDocumentRenderer {
     }
   }
 }
-
-/**
- * Legacy single-page render function — kept for backward compatibility.
- * Prefer PdfDocumentRenderer for multi-page rendering.
- */
-export async function renderPage(
-  pdfBytes: ArrayBuffer,
-  pageIndex: number,
-  canvas: HTMLCanvasElement,
-  containerWidth: number
-): Promise<RenderResult> {
-  const data = new Uint8Array(pdfBytes.slice(0))
-  const pdf = await pdfjsLib.getDocument({
-    data,
-    isEvalSupported: false
-  }).promise
-
-  const page = await pdf.getPage(pageIndex + 1)
-  const viewport = page.getViewport({ scale: 1 })
-  const scale = containerWidth / viewport.width
-  const scaledViewport = page.getViewport({ scale })
-
-  canvas.width = scaledViewport.width
-  canvas.height = scaledViewport.height
-
-  const ctx = canvas.getContext("2d")!
-  await page.render({ canvasContext: ctx, viewport: scaledViewport }).promise
-
-  pdf.destroy()
-
-  return {
-    scale,
-    pageWidth: viewport.width,
-    pageHeight: viewport.height
-  }
-}

@@ -14,9 +14,8 @@ extpay.startBackground()
 
 export {}
 
-// Keep service worker alive for auth callbacks
 chrome.runtime.onInstalled.addListener(() => {
-  console.log("PDF Sign extension installed")
+  // no-op: keeps service worker registered
 })
 
 // Handle messages from popup (e.g., auth flow completion)

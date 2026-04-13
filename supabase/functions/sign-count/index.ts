@@ -11,14 +11,31 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { user_id } = await req.json()
-    if (!user_id) {
+    const authHeader = req.headers.get("authorization")
+    if (!authHeader) {
       return new Response(
-        JSON.stringify({ error: "user_id required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: "Missing authorization header" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       )
     }
 
+    // Verify the JWT and extract user ID server-side
+    const supabaseAuth = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!
+    )
+    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser(
+      authHeader.replace("Bearer ", "")
+    )
+
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: "Invalid token" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      )
+    }
+
+    const userId = user.id
     const month = new Date().toISOString().slice(0, 7)
 
     const supabase = createClient(
@@ -30,7 +47,7 @@ Deno.serve(async (req) => {
     const { data: existing } = await supabase
       .from("sign_usage")
       .select("id, count")
-      .eq("user_id", user_id)
+      .eq("user_id", userId)
       .eq("month", month)
       .single()
 
@@ -46,7 +63,7 @@ Deno.serve(async (req) => {
       newCount = 1
       await supabase
         .from("sign_usage")
-        .insert({ user_id, month, count: 1 })
+        .insert({ user_id: userId, month, count: 1 })
     }
 
     return new Response(

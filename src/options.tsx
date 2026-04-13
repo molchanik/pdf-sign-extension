@@ -24,12 +24,16 @@ export default function Options() {
 
   const handleSignIn = async () => {
     await signInWithGoogle()
+    const s = await getSession()
+    setEmail(s?.user?.email ?? null)
+    const status = await checkProStatus()
+    setProStatus(status)
   }
 
   const handleSignOut = async () => {
     await signOut()
     setEmail(null)
-    setIsPro(false)
+    setProStatus(null)
   }
 
   return (
@@ -59,7 +63,7 @@ export default function Options() {
           </div>
         ) : (
           <p className="text-sm text-gray-500">
-            No saved signature. Draw one in the extension popup and save it.
+            No saved signature. Draw one in the editor and save it.
           </p>
         )}
       </section>
