@@ -37,6 +37,12 @@ describe("checkSignLimit", () => {
     expect(result.used).toBe(1)
   })
 
+  it("returns graceful degradation on null data with no error", async () => {
+    mockInvoke.mockResolvedValue({ data: null, error: null })
+    const result = await checkSignLimit()
+    expect(result).toEqual({ allowed: true, isPro: false, used: 0, limit: 1 })
+  })
+
   it("returns graceful degradation on network error", async () => {
     mockInvoke.mockResolvedValue({
       data: null,

@@ -55,15 +55,27 @@ Deno.serve(async (req) => {
 
     if (existing) {
       newCount = existing.count + 1
-      await supabase
+      const { error: updateError } = await supabase
         .from("sign_usage")
         .update({ count: newCount })
         .eq("id", existing.id)
+      if (updateError) {
+        return new Response(
+          JSON.stringify({ error: "Failed to update usage" }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        )
+      }
     } else {
       newCount = 1
-      await supabase
+      const { error: insertError } = await supabase
         .from("sign_usage")
         .insert({ user_id: userId, month, count: 1 })
+      if (insertError) {
+        return new Response(
+          JSON.stringify({ error: "Failed to record usage" }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        )
+      }
     }
 
     return new Response(

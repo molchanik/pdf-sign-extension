@@ -44,26 +44,6 @@ describe("signPdf", () => {
     expect(doc.getPages()).toHaveLength(1)
   })
 
-  it("embeds text on the correct page", async () => {
-    const input = await createTestPdf(2)
-    const elements: ElementInput[] = [{
-      type: "text",
-      pageIndex: 0,
-      x: 50, y: 50, width: 200, height: 30,
-      text: "Hello World",
-      fontFamily: "Helvetica",
-      fontSize: 16,
-      color: "#000000",
-      bold: false,
-      italic: false,
-    }]
-    const result = await signPdf({ pdfBytes: input, elements })
-    const doc = await PDFDocument.load(result)
-    // PDF was modified (result is larger than input)
-    expect(result.length).toBeGreaterThan(new Uint8Array(input).length)
-    expect(doc.getPages()).toHaveLength(2)
-  })
-
   it("embeds text element and produces larger output", async () => {
     const input = await createTestPdf()
     const emptyResult = await signPdf({ pdfBytes: input, elements: [] })

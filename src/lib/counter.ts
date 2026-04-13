@@ -10,7 +10,7 @@ export interface SignLimitResult {
 export async function checkSignLimit(): Promise<SignLimitResult> {
   const { data, error } = await supabase.functions.invoke("check-limit")
 
-  if (error) {
+  if (error || !data) {
     console.warn("check-limit failed, allowing sign:", error)
     return { allowed: true, isPro: false, used: 0, limit: 1 }
   }

@@ -83,6 +83,32 @@ describe("sign-count edge function", () => {
     expect(body.new_count).toBe(3)
   })
 
+  it("returns 500 when insert fails", async () => {
+    mockSingle.mockResolvedValue({ data: null })
+    mockInsert.mockResolvedValue({ error: new Error("constraint violation") })
+    const req = new Request("http://localhost/sign-count", {
+      method: "POST",
+      headers: { authorization: "Bearer valid-token" },
+    })
+    const res = await handler(req)
+    expect(res.status).toBe(500)
+    const body = await res.json()
+    expect(body.error).toBe("Failed to record usage")
+  })
+
+  it("returns 500 when update fails", async () => {
+    mockSingle.mockResolvedValue({ data: { id: "row-1", count: 2 } })
+    mockUpdateEq.mockResolvedValue({ error: new Error("timeout") })
+    const req = new Request("http://localhost/sign-count", {
+      method: "POST",
+      headers: { authorization: "Bearer valid-token" },
+    })
+    const res = await handler(req)
+    expect(res.status).toBe(500)
+    const body = await res.json()
+    expect(body.error).toBe("Failed to update usage")
+  })
+
   it("returns CORS headers for OPTIONS", async () => {
     const req = new Request("http://localhost/sign-count", { method: "OPTIONS" })
     const res = await handler(req)

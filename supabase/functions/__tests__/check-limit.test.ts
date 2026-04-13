@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 let handler: (req: Request) => Promise<Response>
 
 const mockGetUser = vi.fn()
-const mockEq = vi.fn()
+const mockUsageData = vi.fn<() => any[]>(() => [])
 
 vi.stubGlobal("Deno", {
   env: {
@@ -22,14 +22,10 @@ vi.mock("https://esm.sh/@supabase/supabase-js@2", () => ({
     if (key === "anon-key") {
       return { auth: { getUser: mockGetUser } }
     }
-    // service role client
     return {
       from: () => ({
         select: () => ({
-          eq: (...args: any[]) => {
-            mockEq(...args)
-            return Promise.resolve({ data: [] })
-          },
+          eq: () => Promise.resolve({ data: mockUsageData() }),
         }),
       }),
     }
@@ -75,6 +71,21 @@ describe("check-limit edge function", () => {
     const body = await res.json()
     expect(body.allowed).toBe(true)
     expect(body.used).toBe(0)
+    expect(body.limit).toBe(1)
+  })
+
+  it("returns allowed: false when usage reaches limit", async () => {
+    mockGetUser.mockResolvedValue({ data: { user: { id: "user-123" } }, error: null })
+    mockUsageData.mockReturnValue([{ count: 1 }])
+    const req = new Request("http://localhost/check-limit", {
+      method: "POST",
+      headers: { authorization: "Bearer valid-token" },
+    })
+    const res = await handler(req)
+    expect(res.status).toBe(200)
+    const body = await res.json()
+    expect(body.allowed).toBe(false)
+    expect(body.used).toBe(1)
     expect(body.limit).toBe(1)
   })
 
