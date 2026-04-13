@@ -12,17 +12,19 @@ vi.stubGlobal("chrome", {
   },
 })
 
+function toArrayBuffer(buf: Uint8Array): ArrayBuffer {
+  return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer
+}
+
 // Mock fetch to read font files from disk
 vi.stubGlobal("fetch", vi.fn(async (url: string) => {
   if (url.startsWith("data:")) {
-    // Handle data URLs (for PNG signatures)
     const base64 = url.split(",")[1]
     const buffer = Buffer.from(base64, "base64")
-    return { arrayBuffer: () => Promise.resolve(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength)) }
+    return { arrayBuffer: () => Promise.resolve(toArrayBuffer(buffer)) }
   }
-  // Handle file paths (for fonts)
   const bytes = readFileSync(url)
-  return { arrayBuffer: () => Promise.resolve(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)) }
+  return { arrayBuffer: () => Promise.resolve(toArrayBuffer(bytes)) }
 }))
 
 async function createTestPdf(pageCount = 1): Promise<ArrayBuffer> {
@@ -31,7 +33,7 @@ async function createTestPdf(pageCount = 1): Promise<ArrayBuffer> {
     doc.addPage([612, 792]) // US Letter
   }
   const bytes = await doc.save()
-  return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)
+  return toArrayBuffer(bytes)
 }
 
 describe("signPdf", () => {
