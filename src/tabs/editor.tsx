@@ -33,6 +33,7 @@ function Editor() {
 
   const [currentPage, setCurrentPage] = useState(1)
   const [errorMsg, setErrorMsg] = useState("")
+  const [errorType, setErrorType] = useState<"font" | "general">("general")
 
   const [isPro, setIsPro] = useState(false)
   const [used, setUsed] = useState(0)
@@ -56,6 +57,8 @@ function Editor() {
         setUserEmail(email)
         setAppState("idle")
       }
+      setAuthChecking(false)
+    }).catch(() => {
       setAuthChecking(false)
     })
   }, [])
@@ -246,7 +249,19 @@ function Editor() {
       setUsed(limitResult.used + 1)
       setAppState("done")
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : "Signing failed")
+      const msg = err instanceof Error ? err.message : "Signing failed"
+      if (msg.includes("WinAnsi") || msg.includes("cannot encode")) {
+        const usedFonts = [...new Set(
+          elements.filter(el => el.type === "text").map(el => el.fontFamily)
+        )]
+        const stdFonts = usedFonts.filter(f => ["Helvetica", "Times-Roman", "Courier"].includes(f))
+        const fontName = stdFonts.length > 0 ? stdFonts.join(", ") : "The selected font"
+        setErrorMsg(fontName)
+        setErrorType("font")
+      } else {
+        setErrorMsg(msg)
+        setErrorType("general")
+      }
       setAppState("error")
     }
   }
@@ -290,7 +305,14 @@ function Editor() {
             ) : (
               <button
                 onClick={async () => {
-                  await signInWithGoogle()
+                  try {
+                    await signInWithGoogle()
+                    const email = await getUserEmail()
+                    setUserEmail(email)
+                    setAppState("idle")
+                  } catch (err) {
+                    alert("Sign-in failed: " + (err instanceof Error ? err.message : String(err)))
+                  }
                 }}
                 className="btn-primary w-full py-3 text-base flex items-center justify-center gap-2"
               >
@@ -397,7 +419,10 @@ function Editor() {
             <div className="text-4xl mb-3 text-green-500">&#10003;</div>
             <h2 className="text-lg font-bold text-gray-800 mb-2">Downloaded!</h2>
             <p className="text-sm text-gray-500 mb-4">Your signed PDF has been saved.</p>
-            <button onClick={handleReset} className="btn-primary w-full py-2">Sign another PDF</button>
+            <div className="flex gap-2">
+              <button onClick={() => setAppState("editing")} className="btn-secondary flex-1 py-2">Continue editing</button>
+              <button onClick={handleReset} className="btn-primary flex-1 py-2">Sign another PDF</button>
+            </div>
           </div>
         </div>
       )}
@@ -405,10 +430,33 @@ function Editor() {
       {appState === "error" && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-8 max-w-sm text-center">
-            <div className="text-4xl mb-3 text-red-500">!</div>
-            <h2 className="text-lg font-bold text-gray-800 mb-2">Error</h2>
-            <p className="text-sm text-red-500 mb-4">{errorMsg}</p>
-            <button onClick={() => setAppState("editing")} className="btn-primary w-full py-2">Try again</button>
+            {errorType === "font" ? (
+              <>
+                <svg className="w-12 h-12 mx-auto mb-3" viewBox="0 0 48 48" fill="none">
+                  <path d="M24 4L44 40H4L24 4Z" fill="#FFF3E0" stroke="#FB8C00" strokeWidth="2" strokeLinejoin="round"/>
+                  <path d="M24 18V28" stroke="#FB8C00" strokeWidth="2.5" strokeLinecap="round"/>
+                  <circle cx="24" cy="33" r="1.5" fill="#FB8C00"/>
+                </svg>
+                <h2 className="text-lg font-bold text-gray-800 mb-2">Unsupported characters</h2>
+                <p className="text-sm text-gray-600 mb-1">
+                  <span className="font-semibold">{errorMsg}</span> supports Latin characters only.
+                </p>
+                <p className="text-sm text-gray-500 mb-5">
+                  Switch to <span className="font-semibold">Roboto</span> or <span className="font-semibold">Open Sans</span> for Cyrillic, Greek, and other languages.
+                </p>
+                <button onClick={() => setAppState("editing")} className="btn-primary w-full py-2">Back to editor</button>
+              </>
+            ) : (
+              <>
+                <svg className="w-12 h-12 mx-auto mb-3" viewBox="0 0 48 48" fill="none">
+                  <circle cx="24" cy="24" r="20" fill="#FFEBEE" stroke="#EF5350" strokeWidth="2"/>
+                  <path d="M17 17L31 31M31 17L17 31" stroke="#EF5350" strokeWidth="2.5" strokeLinecap="round"/>
+                </svg>
+                <h2 className="text-lg font-bold text-gray-800 mb-2">Error</h2>
+                <p className="text-sm text-gray-500 mb-5">{errorMsg}</p>
+                <button onClick={() => setAppState("editing")} className="btn-primary w-full py-2">Try again</button>
+              </>
+            )}
           </div>
         </div>
       )}

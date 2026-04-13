@@ -69,18 +69,6 @@ export const FONTS: FontDef[] = [
       "bold-italic": "assets/fonts/OpenSans-BoldItalic.ttf",
     },
   },
-  {
-    id: "DancingScript",
-    label: "Dancing Script",
-    cssFallback: "'Dancing Script', cursive",
-    isStandard: false,
-    variants: {
-      "normal-normal": "assets/fonts/DancingScript-Regular.ttf",
-      "bold-normal": "assets/fonts/DancingScript-Bold.ttf",
-      "normal-italic": "assets/fonts/DancingScript-Regular.ttf",
-      "bold-italic": "assets/fonts/DancingScript-Bold.ttf",
-    },
-  },
 ]
 
 const fontCache = new Map<string, ArrayBuffer>()

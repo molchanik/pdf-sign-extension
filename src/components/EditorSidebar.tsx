@@ -118,6 +118,12 @@ export function EditorSidebar({
       )}
 
       <div className="mt-auto">
+        <div className="text-[10px] text-gray-400 leading-tight mb-2 border border-gray-100 rounded p-1.5">
+          <div className="font-medium text-gray-500 mb-0.5">Font language support</div>
+          <div>Roboto — Latin, Cyrillic, Greek, Vietnamese</div>
+          <div>Open Sans — Latin, Cyrillic, Greek</div>
+          <div>Helvetica, Times, Courier — Latin only</div>
+        </div>
         <div className="text-xs text-gray-400 mb-2">Page {currentPage} of {totalPages}</div>
         <LocalBadge />
         {!isPro && (
