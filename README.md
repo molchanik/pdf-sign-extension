@@ -108,6 +108,15 @@ npm run build          # Production build → build/chrome-mv3-prod/
 npm run dev            # Development with hot reload
 ```
 
+### Test
+
+```bash
+npm test              # Run all tests (Vitest)
+npm run test:watch    # Watch mode
+```
+
+Covers: pdf-signer, fonts, counter, payments, edge functions (check-limit, sign-count).
+
 ### Load in Chrome
 
 1. Open `chrome://extensions/`
