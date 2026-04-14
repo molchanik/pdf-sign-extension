@@ -105,7 +105,7 @@ export async function signPdf(opts: SignOptions): Promise<Uint8Array> {
 }
 
 export function downloadSignedPdf(pdfBytes: Uint8Array, originalFileName: string): void {
-  const blob = new Blob([pdfBytes], { type: "application/pdf" })
+  const blob = new Blob([pdfBytes as Uint8Array<ArrayBuffer>], { type: "application/pdf" })
   const url = URL.createObjectURL(blob)
   const link = document.createElement("a")
   link.href = url
