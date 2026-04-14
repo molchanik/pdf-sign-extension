@@ -9,3 +9,4 @@ build/
 .claude/
 supabase/.temp/
 docs/
+tsconfig.tsbuildinfo
