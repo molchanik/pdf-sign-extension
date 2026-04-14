@@ -1,6 +1,6 @@
 # Privacy Policy — PDF Sign
 
-**Last updated:** April 13, 2026
+**Last updated:** April 14, 2026
 
 ## What the extension does
 
@@ -33,6 +33,7 @@ We store a numeric counter of how many documents you have signed, linked to your
 
 - **Google Sign-In** — used for authentication only. Subject to [Google's Privacy Policy](https://policies.google.com/privacy).
 - **Supabase** — our backend provider that stores your email and usage count. Subject to [Supabase's Privacy Policy](https://supabase.com/privacy).
+- **ExtensionPay** — used to process Pro subscription payments. ExtensionPay uses **Stripe** as its payment processor. Your payment information (card number, billing address) is handled entirely by Stripe and is never stored by us. Subject to [Stripe's Privacy Policy](https://stripe.com/privacy).
 
 ## Data retention
 

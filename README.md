@@ -11,7 +11,7 @@ Chrome extension for signing PDF documents locally. Your file never leaves your 
 - **5 fonts** — Helvetica, Times, Courier (Latin only) + Roboto, Open Sans (Latin, Cyrillic, Greek)
 - **Pen width presets** — Fine, Medium, Thick, Marker
 - **100% local** — all processing happens in browser memory, no server upload
-- **Freemium** — 1 free file, then Pro $2.99/mo or $29.99/yr (via ExtensionPay)
+- **Freemium** — 1 free file (sign in with Google to download), then Pro $2.99/mo or $29.99/yr (via ExtensionPay)
 
 ## Tech Stack
 
@@ -126,11 +126,11 @@ Covers: pdf-signer, fonts, counter, payments, edge functions (check-limit, sign-
 
 ## How It Works
 
-1. Click extension icon → **Open PDF Editor** → full-tab editor opens
+1. Click extension icon → **Open PDF Editor** → full-tab editor opens (no login required)
 2. Drop a PDF → pages render with lazy loading (IntersectionObserver)
 3. **+ Signature** → draw or pick saved → click on page to place
 4. **+ Text** → click on page → type text, style with sidebar controls
 5. Drag, resize, delete any element across pages
-6. **Sign & Download** → pdf-lib embeds all elements → browser downloads signed PDF
+6. **Sign & Download** → sign in with Google (if not already) → pdf-lib embeds all elements → browser downloads signed PDF
 
 All coordinates convert from screen space (top-left origin) to PDF space (bottom-left origin) at sign time. Custom fonts are embedded as TTF via fontkit.
