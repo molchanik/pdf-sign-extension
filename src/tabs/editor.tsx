@@ -142,7 +142,7 @@ function Editor() {
   }, [])
 
   const handleElementUpdate = useCallback((id: string, updates: Partial<PlacedElement>) => {
-    setElements(prev => prev.map(el => el.id === id ? { ...el, ...updates } : el))
+    setElements(prev => prev.map(el => el.id === id ? ({ ...el, ...updates } as PlacedElement) : el))
   }, [])
 
   const handleElementDelete = useCallback((id: string) => {
