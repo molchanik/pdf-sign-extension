@@ -2,7 +2,7 @@
   "name": "pdf-sign-extension",
   "displayName": "PDF Sign",
   "version": "1.1.0",
-  "description": "Sign PDFs privately - your file never leaves your browser",
+  "description": "Sign & fill PDFs privately — draw signatures, add text, download instantly. No uploads, no account needed to edit.",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
