@@ -34,59 +34,70 @@ export async function getUserEmail(): Promise<string | null> {
 }
 
 /**
- * Sign in with Google using chrome.identity.launchWebAuthFlow.
- * This handles the OAuth redirect inside the extension context
- * instead of opening a new tab that redirects to localhost.
+ * Sign in with Google using chrome.identity.getAuthToken.
+ * Uses Chrome's native account picker (no consent screen / "unverified app" warning).
+ * Exchanges the Google access token for an ID token, then creates a Supabase session.
  */
 export async function signInWithGoogle(): Promise<void> {
-  const redirectUrl = chrome.identity.getRedirectURL()
-
-  // Get the OAuth URL from Supabase
-  const { data } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: redirectUrl,
-      skipBrowserRedirect: true,
-    }
-  })
-
-  if (!data.url) {
-    throw new Error("Failed to get OAuth URL")
-  }
-
-  // Use chrome.identity to handle the OAuth flow in a popup
-  const responseUrl = await new Promise<string>((resolve, reject) => {
-    chrome.identity.launchWebAuthFlow(
-      { url: data.url, interactive: true },
-      (callbackUrl) => {
-        if (chrome.runtime.lastError) {
-          reject(new Error(chrome.runtime.lastError.message))
-        } else if (callbackUrl) {
-          resolve(callbackUrl)
-        } else {
-          reject(new Error("No callback URL"))
-        }
+  // Get Google access token via Chrome's native flow
+  const accessToken = await new Promise<string>((resolve, reject) => {
+    chrome.identity.getAuthToken({ interactive: true }, (token) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message))
+      } else if (token) {
+        resolve(token)
+      } else {
+        reject(new Error("No token received"))
       }
-    )
+    })
   })
 
-  // Extract tokens from the callback URL
-  const hashParams = new URLSearchParams(
-    responseUrl.split("#")[1] || responseUrl.split("?")[1] || ""
+  // Exchange access token for ID token via Google's OAuth2 API
+  const idToken = await fetchIdToken(accessToken)
+
+  // Create Supabase session with the Google ID token
+  const { error } = await supabase.auth.signInWithIdToken({
+    provider: "google",
+    token: idToken,
+  })
+
+  if (error) {
+    throw new Error(`Sign-in failed: ${error.message}`)
+  }
+}
+
+/**
+ * Exchange a Google access token for an ID token.
+ * Tries Google's v3 tokeninfo first, falls back to v1 tokeninfo.
+ */
+async function fetchIdToken(accessToken: string): Promise<string> {
+  const res = await fetch(
+    "https://oauth2.googleapis.com/tokeninfo?access_token=" + accessToken
   )
-
-  const accessToken = hashParams.get("access_token")
-  const refreshToken = hashParams.get("refresh_token")
-
-  if (!accessToken || !refreshToken) {
-    throw new Error("Authentication failed - no tokens received")
+  if (!res.ok) {
+    throw new Error("Failed to verify Google token")
+  }
+  const info = await res.json()
+  if (!info.email) {
+    throw new Error("Google token missing email")
+  }
+  if (info.id_token) {
+    return info.id_token
   }
 
-  // Set the session in Supabase client
-  await supabase.auth.setSession({
-    access_token: accessToken,
-    refresh_token: refreshToken,
-  })
+  // Fallback: v1 tokeninfo may return id_token for tokens with openid scope
+  const v1Res = await fetch(
+    "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + accessToken
+  )
+  if (!v1Res.ok) {
+    throw new Error("Failed to get ID token from Google")
+  }
+  const v1Info = await v1Res.json()
+  if (v1Info.id_token) {
+    return v1Info.id_token
+  }
+
+  throw new Error("Could not obtain Google ID token")
 }
 
 export async function signOut(): Promise<void> {
