@@ -101,6 +101,18 @@ async function fetchIdToken(accessToken: string): Promise<string> {
 }
 
 export async function signOut(): Promise<void> {
+  // Clear cached Google token so next sign-in shows account picker
+  try {
+    const token = await new Promise<string>((resolve, reject) => {
+      chrome.identity.getAuthToken({ interactive: false }, (t) => {
+        if (t) resolve(t)
+        else reject()
+      })
+    })
+    await chrome.identity.removeCachedAuthToken({ token })
+  } catch {
+    // No cached token — nothing to clear
+  }
   await supabase.auth.signOut()
 }
 
