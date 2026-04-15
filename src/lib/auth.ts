@@ -36,7 +36,8 @@ export async function getUserEmail(): Promise<string | null> {
 /**
  * Sign in with Google using chrome.identity.getAuthToken.
  * Uses Chrome's native account picker (no consent screen / "unverified app" warning).
- * Exchanges the Google access token for an ID token, then creates a Supabase session.
+ * The Google access token is verified server-side by the google-signin edge function,
+ * which returns a magic link token that establishes the Supabase session.
  */
 export async function signInWithGoogle(): Promise<void> {
   // Get Google access token via Chrome's native flow
@@ -52,52 +53,24 @@ export async function signInWithGoogle(): Promise<void> {
     })
   })
 
-  // Exchange access token for ID token via Google's OAuth2 API
-  const idToken = await fetchIdToken(accessToken)
+  // Exchange Google token for Supabase session via edge function
+  const { data, error: fnError } = await supabase.functions.invoke("google-signin", {
+    body: { google_access_token: accessToken },
+  })
 
-  // Create Supabase session with the Google ID token
-  const { error } = await supabase.auth.signInWithIdToken({
-    provider: "google",
-    token: idToken,
+  if (fnError || !data?.token_hash) {
+    throw new Error("Sign-in failed: " + (fnError?.message || "No token received from server"))
+  }
+
+  // Verify the token to establish Supabase session
+  const { error } = await supabase.auth.verifyOtp({
+    token_hash: data.token_hash,
+    type: "magiclink",
   })
 
   if (error) {
     throw new Error(`Sign-in failed: ${error.message}`)
   }
-}
-
-/**
- * Exchange a Google access token for an ID token.
- * Tries Google's v3 tokeninfo first, falls back to v1 tokeninfo.
- */
-async function fetchIdToken(accessToken: string): Promise<string> {
-  const res = await fetch(
-    "https://oauth2.googleapis.com/tokeninfo?access_token=" + accessToken
-  )
-  if (!res.ok) {
-    throw new Error("Failed to verify Google token")
-  }
-  const info = await res.json()
-  if (!info.email) {
-    throw new Error("Google token missing email")
-  }
-  if (info.id_token) {
-    return info.id_token
-  }
-
-  // Fallback: v1 tokeninfo may return id_token for tokens with openid scope
-  const v1Res = await fetch(
-    "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + accessToken
-  )
-  if (!v1Res.ok) {
-    throw new Error("Failed to get ID token from Google")
-  }
-  const v1Info = await v1Res.json()
-  if (v1Info.id_token) {
-    return v1Info.id_token
-  }
-
-  throw new Error("Could not obtain Google ID token")
 }
 
 export async function signOut(): Promise<void> {

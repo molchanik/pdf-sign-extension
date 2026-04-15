@@ -38,7 +38,7 @@
       "identity"
     ],
     "oauth2": {
-      "client_id": "836027625583-4ai30de2tvaduepb4vgink6jm8nnjosg.apps.googleusercontent.com",
+      "client_id": "836027625583-ut67ekjtdnfrp5tieh6ggep2dk9kopnb.apps.googleusercontent.com",
       "scopes": [
         "openid",
         "email",
@@ -46,8 +46,7 @@
       ]
     },
     "host_permissions": [
-      "https://zeavnlowvyvewvysfxmj.supabase.co/*",
-      "https://www.googleapis.com/*"
+      "https://zeavnlowvyvewvysfxmj.supabase.co/*"
     ],
     "web_accessible_resources": [
       {
