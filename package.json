@@ -37,8 +37,17 @@
       "storage",
       "identity"
     ],
+    "oauth2": {
+      "client_id": "836027625583-4ai30de2tvaduepb4vgink6jm8nnjosg.apps.googleusercontent.com",
+      "scopes": [
+        "openid",
+        "email",
+        "profile"
+      ]
+    },
     "host_permissions": [
-      "https://zeavnlowvyvewvysfxmj.supabase.co/*"
+      "https://zeavnlowvyvewvysfxmj.supabase.co/*",
+      "https://www.googleapis.com/*"
     ],
     "web_accessible_resources": [
       {
