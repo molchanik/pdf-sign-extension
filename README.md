@@ -22,7 +22,7 @@ Chrome extension for signing PDF documents locally. Your file never leaves your 
 | PDF read   | pdfjs-dist (PDF.js)                   |
 | PDF write  | pdf-lib + @pdf-lib/fontkit            |
 | Signatures | signature_pad                         |
-| Auth       | Supabase (Google OAuth)                |
+| Auth       | Supabase + chrome.identity (Google)    |
 | Payments   | ExtensionPay                          |
 
 ## Project Structure
@@ -56,7 +56,7 @@ src/
 │   ├── types.ts                 # Shared TypeScript types
 │   ├── storage.ts               # chrome.storage wrapper (multi-sig)
 │   ├── signature-trim.ts        # Canvas transparent edge trimming
-│   ├── auth.ts                  # Supabase auth (Google OAuth)
+│   ├── auth.ts                  # Google auth (chrome.identity + Supabase)
 │   ├── counter.ts               # Freemium usage counter
 │   └── payments.ts              # ExtensionPay integration
 └── styles/globals.css           # Tailwind + custom utilities
@@ -97,8 +97,9 @@ Run the migration in Supabase SQL Editor:
 ### Edge Functions
 
 ```bash
-supabase functions deploy check-limit
-supabase functions deploy sign-count
+supabase functions deploy google-signin --no-verify-jwt
+supabase functions deploy check-limit --no-verify-jwt
+supabase functions deploy sign-count --no-verify-jwt
 ```
 
 ### Build
