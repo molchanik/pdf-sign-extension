@@ -208,32 +208,93 @@ code {
 
 .hero {
   position: relative;
-  padding: 96px 0 40px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 120px 0 80px;
   overflow: hidden;
   isolation: isolate;
 }
 
-.hero__glow {
+/* ---- Hero image background with slow Ken-Burns zoom ---- */
+.hero__image {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: -3;
+  will-change: transform;
+  animation: ken-burns 18s ease-in-out infinite alternate;
+}
+@keyframes ken-burns {
+  from { transform: scale(1) translate(0, 0); }
+  to   { transform: scale(1.06) translate(-1%, -1.5%); }
+}
+
+/* ---- Vertical dark gradient for text contrast ---- */
+.hero__gradient {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
   background:
-    radial-gradient(ellipse 70% 55% at 50% 55%, var(--accent-glow) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 30% at 50% 30%, rgba(185, 28, 28, 0.15) 0%, transparent 70%);
-  filter: blur(20px);
-  opacity: 0.7;
-  z-index: -1;
+    linear-gradient(180deg,
+      rgba(10, 10, 10, 0.55) 0%,
+      rgba(10, 10, 10, 0.35) 45%,
+      rgba(10, 10, 10, 0.85) 100%),
+    radial-gradient(ellipse 60% 45% at 50% 55%, rgba(185, 28, 28, 0.18) 0%, transparent 70%);
   pointer-events: none;
 }
 
-.hero__inner { text-align: center; }
+/* ---- Film grain tile (SVG data-URL from :root --noise-url) ---- */
+.hero__grain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--noise-url);
+  background-size: 200px 200px;
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.hero__inner {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
 
 .hero__h1 {
-  font-size: clamp(38px, 6vw, 68px);
+  font-size: clamp(40px, 5.2vw + 1vh, 76px);
   line-height: 1.02;
-  letter-spacing: -0.03em;
-  margin-bottom: 24px;
-  max-width: 18ch;
+  letter-spacing: -0.035em;
+  margin-bottom: 28px;
+  max-width: 20ch;
   margin-inline: auto;
+  font-variation-settings: "wght" 400;
+  animation: h1-weight-settle 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+}
+
+.hero__line {
+  display: block;
+}
+
+.hero__h1 .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(18px);
+  animation: word-in 0.85s var(--ease) forwards;
+  animation-delay: calc(0.25s + var(--word-i, 0) * 0.08s);
+  margin-right: 0.22em;
+}
+
+@keyframes h1-weight-settle {
+  from { font-variation-settings: "wght" 400; }
+  to   { font-variation-settings: "wght" 600; }
+}
+@keyframes word-in {
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .hero__sub {
@@ -249,142 +310,9 @@ code {
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-bottom: 72px;
+  margin-bottom: 0;
 }
 
-/* ================================================= HERO SCENE */
-/* Inline SVG scene: wooden desk, parchment, inkwell, quill.
-   Single-play sequence on page load, ends at rested-with-signature. */
-
-.hero__scene {
-  position: relative;
-  max-width: 1040px;
-  margin: 0 auto;
-  border-radius: var(--r-xl);
-  overflow: hidden;
-  border: 1px solid var(--border);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 40px 80px -20px rgba(0, 0, 0, 0.85),
-    0 0 120px -10px var(--accent-glow);
-  transform: perspective(1400px) rotateX(3deg);
-  transform-origin: center bottom;
-  aspect-ratio: 1000 / 600;
-  background: #120B07;
-}
-
-.hero__scene .scene {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* ---- Signature reveal ----
-   The <use> node with class .scene__signature references #sig-path.
-   Path length is ~600 (measured approximately); tune via --sig-len. */
-.scene__signature {
-  --sig-len: 620;
-  stroke-dasharray: var(--sig-len);
-  stroke-dashoffset: var(--sig-len);
-  animation: sig-ink 3s 3.8s var(--ease) forwards;
-  filter: drop-shadow(0 0.5px 0 rgba(14,11,26,0.4));
-}
-@keyframes sig-ink {
-  to { stroke-dashoffset: 0; }
-}
-
-/* ---- Stamp reveal ---- */
-.scene__stamp {
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
-  animation: stamp-press 0.55s 7.1s var(--ease) forwards;
-}
-@keyframes stamp-press {
-  0%   { opacity: 0; transform: scale(2.4) rotate(-6deg); }
-  70%  { opacity: 1; transform: scale(0.92) rotate(-6deg); }
-  100% { opacity: 1; transform: scale(1) rotate(-6deg); }
-}
-
-/* ---- Wet ink on nib ---- */
-.scene__nib-ink {
-  opacity: 0;
-  animation: nib-wet 6.5s 1.8s linear forwards;
-}
-@keyframes nib-wet {
-  0%   { opacity: 0; }
-  5%   { opacity: 1; }
-  85%  { opacity: 0.6; }
-  100% { opacity: 0.1; }
-}
-
-/* ---- Ink drop that falls from lifted quill ---- */
-.scene__drop {
-  opacity: 0;
-  animation: drop-fall 0.6s 2.55s var(--ease) forwards;
-}
-@keyframes drop-fall {
-  0%   { opacity: 0; transform: translate(130px, 420px) scale(0.3); }
-  25%  { opacity: 1; transform: translate(130px, 420px) scale(1); }
-  100% { opacity: 0; transform: translate(132px, 540px) scale(0.6); }
-}
-
-/* ---- Quill orchestration ----
-   The quill's nib sits at local (0,8) in SVG space. With transform-box:
-   fill-box, we pivot rotations around that nib via transform-origin. */
-.scene__quill {
-  transform-box: fill-box;
-  transform-origin: 16px 188px;   /* nib inside bbox (width 32, height 188) */
-  animation: quill-fly 8s var(--ease) forwards;
-}
-@keyframes quill-fly {
-  /* Offscreen top-right, fading in */
-  0%    { transform: translate(1100px, -150px) rotate(55deg); opacity: 0; }
-  5%    { opacity: 1; }
-  /* Glide toward inkwell */
-  14%   { transform: translate(180px, 390px) rotate(22deg); }
-  /* Dip into inkwell */
-  22%   { transform: translate(130px, 430px) rotate(10deg); }
-  26%   { transform: translate(130px, 430px) rotate(10deg); }
-  /* Lift out, rotate upright, ink drip */
-  32%   { transform: translate(130px, 390px) rotate(14deg); }
-  /* Travel to parchment start (above sig path) */
-  44%   { transform: translate(340px, 400px) rotate(-8deg); }
-  /* Sign: nib traces along signature (sync with sig-ink 3.8-6.8s) */
-  48%   { transform: translate(340px, 405px) rotate(-8deg); }
-  56%   { transform: translate(442px, 400px) rotate(-4deg); }
-  64%   { transform: translate(520px, 400px) rotate(-2deg); }
-  72%   { transform: translate(598px, 395px) rotate(-6deg); }
-  80%   { transform: translate(678px, 390px) rotate(-10deg); }
-  84%   { transform: translate(706px, 378px) rotate(-12deg); }
-  /* Lift off, arc to rest */
-  90%   { transform: translate(830px, 300px) rotate(-28deg); }
-  /* Rest, leaning against right edge of desk */
-  100%  { transform: translate(870px, 290px) rotate(-32deg); }
-}
-
-/* ---- Inkwell rim pulse (cherry-scarlet breathing) ---- */
-.scene__ink-surface {
-  animation: ink-ripple 3s 2s ease-in-out 2;
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
-}
-@keyframes ink-ripple {
-  0%, 100% { transform: scale(1); }
-  15%      { transform: scale(0.85); }
-  30%      { transform: scale(1.05); }
-  50%      { transform: scale(0.98); }
-}
-
-/* Reduced-motion: freeze the final state (no movement, no loops). */
-@media (prefers-reduced-motion: reduce) {
-  .scene__quill       { animation: none; transform: translate(870px, 290px) rotate(-32deg); }
-  .scene__signature   { animation: none; stroke-dashoffset: 0; }
-  .scene__stamp       { animation: none; opacity: 1; }
-  .scene__nib-ink     { animation: none; opacity: 0.1; }
-  .scene__drop        { display: none; }
-  .scene__ink-surface { animation: none; }
-}
 
 /* ======================================================== TRUSTBAR */
 
@@ -1149,4 +1077,10 @@ code {
     transform: none;
     transition: none;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__image  { animation: none; transform: none; }
+  .hero__h1     { animation: none; font-variation-settings: "wght" 600; }
+  .hero__h1 .word { animation: none; opacity: 1; transform: none; }
 }
