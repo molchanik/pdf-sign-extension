@@ -703,19 +703,6 @@ code {
   22%, 38%      { filter: drop-shadow(0 0 6px rgba(185,28,28,0.7)); }
 }
 
-.illus-noauth__freebadge {
-  opacity: 0;
-  animation: illus-noauth-badge 4.4s var(--ease) infinite;
-  animation-delay: 0.2s;
-}
-.illus-noauth__freebadge--2 { animation-delay: 1.5s; }
-@keyframes illus-noauth-badge {
-  0%, 15%  { opacity: 0; }
-  22%      { opacity: 1; }
-  85%      { opacity: 1; }
-  100%     { opacity: 0; }
-}
-
 .illus-noauth__shackle {
   transform-box: fill-box;
   transform-origin: 50% 100%;
@@ -747,14 +734,12 @@ code {
   .illus-form__check,
   .illus-noauth__progress,
   .illus-noauth__step,
-  .illus-noauth__freebadge,
   .illus-noauth__shackle,
   .illus-noauth__circle3 { animation: none; }
   .illus-text__name--1 { opacity: 1; }
   .illus-form__fill  { width: 200px; }
   .illus-form__check { opacity: 1; }
   .illus-noauth__progress { stroke-dasharray: none; }
-  .illus-noauth__freebadge { opacity: 1; }
 }
 
 @media (max-width: 840px) {
