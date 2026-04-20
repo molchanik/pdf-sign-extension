@@ -690,17 +690,31 @@ code {
   100% { x2: 330; opacity: 0; }
 }
 
-.illus-noauth__step {
+/* Stroke + drop-shadow pulse cycles through all three step circles so
+   the cherry highlight visibly moves Open → Edit → Download, rather
+   than sitting statically on Download. Each step owns the circle
+   stroke via CSS (no hardcoded `stroke` on the <circle> in SVG). */
+.illus-noauth__ring {
+  stroke: #27272A;
+  stroke-width: 1.5;
+  animation: illus-noauth-step 4.4s var(--ease) infinite;
   transform-box: fill-box;
   transform-origin: center;
-  animation: illus-noauth-step 4.4s var(--ease) infinite;
 }
-.illus-noauth__step--1 { animation-delay: 0.2s; }
-.illus-noauth__step--2 { animation-delay: 1.5s; }
-.illus-noauth__step--3 { animation-delay: 2.8s; }
+.illus-noauth__step--1 .illus-noauth__ring { animation-delay: 0.2s; }
+.illus-noauth__step--2 .illus-noauth__ring { animation-delay: 1.5s; }
+.illus-noauth__step--3 .illus-noauth__ring { animation-delay: 2.8s; }
 @keyframes illus-noauth-step {
-  0%, 18%, 100% { filter: none; }
-  22%, 38%      { filter: drop-shadow(0 0 6px rgba(185,28,28,0.7)); }
+  0%, 18%, 100% {
+    stroke: #27272A;
+    stroke-width: 1.5;
+    filter: none;
+  }
+  22%, 38% {
+    stroke: #B91C1C;
+    stroke-width: 1.8;
+    filter: drop-shadow(0 0 8px rgba(185,28,28,0.75));
+  }
 }
 
 .illus-noauth__shackle {
@@ -715,17 +729,6 @@ code {
   100%     { transform: rotate(0deg) translateY(0); }
 }
 
-.illus-noauth__circle3 {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: illus-noauth-circle3 4.4s var(--ease) infinite;
-}
-@keyframes illus-noauth-circle3 {
-  0%, 70%  { filter: drop-shadow(0 0 0 rgba(185,28,28,0)); }
-  80%, 92% { filter: drop-shadow(0 0 10px rgba(185,28,28,0.7)); }
-  100%     { filter: drop-shadow(0 0 0 rgba(185,28,28,0)); }
-}
-
 /* Illus reduced-motion freeze */
 @media (prefers-reduced-motion: reduce) {
   .illus-text__name tspan,
@@ -733,9 +736,8 @@ code {
   .illus-form__fill,
   .illus-form__check,
   .illus-noauth__progress,
-  .illus-noauth__step,
-  .illus-noauth__shackle,
-  .illus-noauth__circle3 { animation: none; }
+  .illus-noauth__ring,
+  .illus-noauth__shackle { animation: none; }
   .illus-text__name--1 { opacity: 1; }
   .illus-form__fill  { width: 260px; }
   .illus-form__check { opacity: 1; }
