@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDF Sign — Sign PDFs in your browser. Nothing uploads.</title>
+  <meta name="description" content="Chrome extension for signing, filling, and editing PDFs. All processing happens in your browser — files never leave your computer. Free for the first file, $2.99/mo unlimited." />
+
+  <link rel="icon" type="image/png" href="../assets/icon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ========================================================= NAV -->
+<header class="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="#top">
+      <img src="../assets/icon.png" alt="" width="28" height="28" />
+      <span>PDF Sign</span>
+    </a>
+    <nav class="nav__links">
+      <a href="#features">Features</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn--primary btn--sm" href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing" target="_blank" rel="noopener">
+      Add to Chrome
+    </a>
+  </div>
+</header>
+
+<!-- ======================================================= HERO -->
+<section class="hero" id="top">
+  <div class="hero__glow" aria-hidden="true"></div>
+
+  <div class="container hero__inner">
+    <p class="eyebrow">Chrome extension · Open source</p>
+    <h1 class="hero__h1">
+      Sign PDFs in your browser.<br />
+      <span class="accent">Nothing uploads.</span>
+    </h1>
+    <p class="hero__sub">
+      Fill forms, place signatures, add text. Every file is processed locally by your browser — no server, no account wall, no waitlist.
+    </p>
+    <div class="hero__cta">
+      <a class="btn btn--primary btn--lg" href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing" target="_blank" rel="noopener">
+        Add to Chrome — Free
+      </a>
+      <a class="btn btn--ghost btn--lg" href="#pricing">
+        See pricing
+      </a>
+    </div>
+
+    <div class="hero__scene" aria-hidden="true">
+      <svg class="scene" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <!-- Wooden desk -->
+          <linearGradient id="desk" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"  stop-color="#3A2418"/>
+            <stop offset="55%" stop-color="#1F130A"/>
+            <stop offset="100%" stop-color="#120B07"/>
+          </linearGradient>
+          <filter id="wood-grain" x="0" y="0" width="1" height="1">
+            <feTurbulence type="turbulence" baseFrequency="0.025 0.55" numOctaves="2" seed="3"/>
+            <feColorMatrix values="0 0 0 0 0.06  0 0 0 0 0.04  0 0 0 0 0.02  0 0 0 0.55 0"/>
+          </filter>
+
+          <!-- Parchment shadow -->
+          <filter id="parchment-shadow" x="-0.15" y="-0.15" width="1.3" height="1.3">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+            <feOffset dx="0" dy="8"/>
+            <feComponentTransfer><feFuncA type="linear" slope="0.55"/></feComponentTransfer>
+            <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+
+          <!-- Parchment grain (warm speckle) -->
+          <filter id="parchment-grain" x="0" y="0" width="1" height="1">
+            <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7"/>
+            <feColorMatrix values="0 0 0 0 0.55  0 0 0 0 0.45  0 0 0 0 0.3  0 0 0 0.14 0"/>
+          </filter>
+
+          <!-- Inkwell glass -->
+          <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"  stop-color="rgba(210,225,235,0.28)"/>
+            <stop offset="100%" stop-color="rgba(40,50,65,0.55)"/>
+          </linearGradient>
+          <radialGradient id="ink-liquid" cx="0.5" cy="0.5" r="0.7">
+            <stop offset="0%"  stop-color="#201827"/>
+            <stop offset="100%" stop-color="#06040A"/>
+          </radialGradient>
+
+          <!-- Quill shaft + feather -->
+          <linearGradient id="quill-shaft" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="#6B5D4B"/>
+            <stop offset="50%"  stop-color="#E8DDC4"/>
+            <stop offset="100%" stop-color="#8A7862"/>
+          </linearGradient>
+          <linearGradient id="feather" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#F7F2E8"/>
+            <stop offset="60%"  stop-color="#C8BDA3"/>
+            <stop offset="100%" stop-color="#7B6C55"/>
+          </linearGradient>
+
+          <!-- Cherry glow for stamp + inkwell rim -->
+          <radialGradient id="cherry" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%"   stop-color="rgba(185,28,28,0.45)"/>
+            <stop offset="100%" stop-color="rgba(185,28,28,0)"/>
+          </radialGradient>
+        </defs>
+
+        <!-- =================== DESK =================== -->
+        <rect x="0" y="0" width="1000" height="600" fill="url(#desk)"/>
+        <rect x="0" y="0" width="1000" height="600" filter="url(#wood-grain)"/>
+        <!-- Subtle board seams -->
+        <g opacity="0.35" stroke="#000" stroke-width="0.6">
+          <line x1="0" y1="168" x2="1000" y2="171"/>
+          <line x1="0" y1="358" x2="1000" y2="355"/>
+          <line x1="0" y1="524" x2="1000" y2="527"/>
+        </g>
+
+        <!-- Ambient cherry glow behind parchment -->
+        <ellipse cx="500" cy="360" rx="460" ry="220" fill="url(#cherry)" opacity="0.6"/>
+
+        <!-- =================== PARCHMENT =================== -->
+        <g class="scene__parchment" transform="translate(240 150) rotate(-1.4 280 190)">
+          <rect x="0" y="0" width="560" height="380" rx="5" fill="#F2E5CB" filter="url(#parchment-shadow)"/>
+          <rect x="0" y="0" width="560" height="380" rx="5" filter="url(#parchment-grain)" opacity="0.9"/>
+          <!-- Worn edges -->
+          <rect x="0" y="0" width="560" height="380" rx="5" fill="none" stroke="rgba(139,115,85,0.25)" stroke-width="1"/>
+          <!-- Document header -->
+          <text x="40" y="48" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="10" fill="#8B7355" letter-spacing="2">DOCUMENT · 2026</text>
+          <!-- Faux body lines -->
+          <g opacity="0.17" stroke="#6B5538" stroke-width="0.6" stroke-linecap="round">
+            <line x1="40" y1="90"  x2="510" y2="90"/>
+            <line x1="40" y1="118" x2="500" y2="118"/>
+            <line x1="40" y1="146" x2="510" y2="146"/>
+            <line x1="40" y1="174" x2="420" y2="174"/>
+            <line x1="40" y1="202" x2="490" y2="202"/>
+            <line x1="40" y1="230" x2="380" y2="230"/>
+          </g>
+          <!-- Signature label -->
+          <text x="40" y="284" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="9" fill="#8B7355" letter-spacing="1.5">SIGNATURE</text>
+          <line x1="40" y1="290" x2="400" y2="290" opacity="0.3" stroke="#6B5538" stroke-width="0.6"/>
+        </g>
+
+        <!-- Signature stroke (drawn during animation) -->
+        <path class="scene__signature"
+              d="M 340 405 C 370 355, 410 355, 442 400 C 468 438, 498 438, 520 400 C 540 360, 572 355, 598 395 C 622 432, 658 428, 678 390 L 706 378"
+              fill="none" stroke="#0E0B1A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <!-- Stamp (appears last) -->
+        <g class="scene__stamp" transform="translate(690 470)">
+          <circle r="44" fill="rgba(185,28,28,0.05)" stroke="#B91C1C" stroke-width="2.2"/>
+          <circle r="37" fill="none" stroke="#B91C1C" stroke-width="0.6" stroke-dasharray="2 2"/>
+          <text text-anchor="middle" y="-4" font-family="'JetBrains Mono', monospace" font-size="8" fill="#B91C1C" letter-spacing="1.5" font-weight="500">PDF SIGN</text>
+          <text text-anchor="middle" y="10" font-family="'JetBrains Mono', monospace" font-size="6.5" fill="#B91C1C" letter-spacing="2">· 2026 ·</text>
+          <text text-anchor="middle" y="22" font-family="'JetBrains Mono', monospace" font-size="5.5" fill="#B91C1C" letter-spacing="1">SIGNED</text>
+        </g>
+
+        <!-- =================== INKWELL =================== -->
+        <g class="scene__inkwell" transform="translate(130 430)">
+          <!-- Cast shadow on desk -->
+          <ellipse cx="0" cy="62" rx="78" ry="10" fill="rgba(0,0,0,0.55)"/>
+          <!-- Glass body -->
+          <path d="M -58 -8 Q -64 38 -58 56 L 58 56 Q 64 38 58 -8 Z" fill="url(#glass)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+          <!-- Ink inside body -->
+          <path d="M -52 8 Q -58 36 -52 53 L 52 53 Q 58 36 52 8 Z" fill="url(#ink-liquid)"/>
+          <!-- Cherry rim halo -->
+          <ellipse cx="0" cy="-8" rx="36" ry="8" fill="url(#cherry)" opacity="0.8"/>
+          <!-- Opening (top) -->
+          <ellipse cx="0" cy="-8" rx="28" ry="7" fill="#0A0710" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+          <!-- Cherry rim line -->
+          <ellipse cx="0" cy="-8" rx="28" ry="7" fill="none" stroke="#B91C1C" stroke-width="0.8" opacity="0.7"/>
+          <!-- Ink surface -->
+          <ellipse class="scene__ink-surface" cx="0" cy="-8" rx="24" ry="5.5" fill="url(#ink-liquid)"/>
+          <!-- Glass highlight -->
+          <path d="M -47 0 Q -54 22 -50 42" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+        </g>
+
+        <!-- =================== QUILL =================== -->
+        <g class="scene__quill">
+          <g class="scene__quill-body">
+            <!-- Feather barbs (two sides, layered) -->
+            <path d="M 0 -180 L -14 -158 L -9 -138 L -16 -118 L -8 -98 L -14 -78 L -6 -58 L -10 -38 L 0 -20"
+                  fill="url(#feather)" opacity="0.95"/>
+            <path d="M 0 -180 L 14 -158 L 9 -138 L 16 -118 L 8 -98 L 14 -78 L 6 -58 L 10 -38 L 0 -20"
+                  fill="url(#feather)" opacity="0.85"/>
+            <!-- Barb filaments -->
+            <g stroke="#7A6A52" stroke-width="0.5" opacity="0.55" fill="none">
+              <line x1="0" y1="-170" x2="-10" y2="-158"/>
+              <line x1="0" y1="-150" x2="-7" y2="-138"/>
+              <line x1="0" y1="-130" x2="-12" y2="-118"/>
+              <line x1="0" y1="-110" x2="-6" y2="-98"/>
+              <line x1="0" y1="-90"  x2="-10" y2="-78"/>
+              <line x1="0" y1="-70"  x2="-4" y2="-58"/>
+              <line x1="0" y1="-50"  x2="-7" y2="-38"/>
+              <line x1="0" y1="-170" x2="10" y2="-158"/>
+              <line x1="0" y1="-150" x2="7"  y2="-138"/>
+              <line x1="0" y1="-130" x2="12" y2="-118"/>
+              <line x1="0" y1="-110" x2="6"  y2="-98"/>
+              <line x1="0" y1="-90"  x2="10" y2="-78"/>
+              <line x1="0" y1="-70"  x2="4"  y2="-58"/>
+              <line x1="0" y1="-50"  x2="7"  y2="-38"/>
+            </g>
+            <!-- Shaft -->
+            <rect x="-1.8" y="-180" width="3.6" height="180" fill="url(#quill-shaft)"/>
+            <!-- Nib -->
+            <path d="M -2.2 -5 L 0 8 L 2.2 -5 Z" fill="#0E0B1A"/>
+            <line x1="0" y1="-3" x2="0" y2="7" stroke="rgba(255,255,255,0.12)" stroke-width="0.4"/>
+            <!-- Wet ink on nib (fades in after dip) -->
+            <circle class="scene__nib-ink" cx="0" cy="7" r="2.2" fill="#0E0B1A"/>
+          </g>
+        </g>
+
+        <!-- Ink drop (falls from nib after dip) -->
+        <circle class="scene__drop" cx="0" cy="0" r="2.6" fill="#0E0B1A"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================== TRUST BAR -->
+<section class="trustbar">
+  <div class="container trustbar__inner">
+    <span>No uploads</span>
+    <span class="dot">·</span>
+    <span>MIT licensed</span>
+    <span class="dot">·</span>
+    <span>5 fonts incl. Cyrillic</span>
+    <span class="dot">·</span>
+    <span>Up to 50 MB</span>
+    <span class="dot">·</span>
+    <span>No account to try</span>
+  </div>
+</section>
+
+<!-- ================================================ HOW IT WORKS -->
+<section class="section how">
+  <div class="container">
+    <p class="eyebrow">How it works</p>
+    <h2 class="section__h2">Three steps. No sign-up to try it.</h2>
+
+    <div class="how__grid reveal-stagger">
+      <div class="how__step reveal">
+        <span class="how__num">01</span>
+        <h3>Drop a PDF</h3>
+        <p>Drag a file into the editor, or pick one from your disk. Up to 50 MB per file.</p>
+      </div>
+      <div class="how__step reveal">
+        <span class="how__num">02</span>
+        <h3>Sign &amp; fill</h3>
+        <p>Draw a signature, reuse a saved one, add text, checkmarks, and dates — right on the page.</p>
+      </div>
+      <div class="how__step reveal">
+        <span class="how__num">03</span>
+        <h3>Download</h3>
+        <p>Get the signed PDF back on your disk. Nothing was sent to us along the way.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== PRIVACY -->
+<section class="section privacy" id="privacy">
+  <div class="container privacy__inner">
+    <div class="privacy__copy reveal">
+      <p class="eyebrow">Privacy by architecture</p>
+      <h2 class="section__h2">
+        Your PDF never leaves the browser.
+      </h2>
+      <p class="privacy__body">
+        PDF Sign reads, edits, and saves your file entirely inside the browser tab. No upload step, no temporary server copy, no third-party OCR. The only thing we touch server-side is an anonymized counter — how many files you have signed total — to enforce the free-tier limit.
+      </p>
+      <p class="privacy__note">
+        <code>Supabase stores: user_id · files_signed · subscription_status.</code><br />
+        <code>Supabase never sees: the PDF itself · field values · signature image.</code>
+      </p>
+    </div>
+
+    <div class="privacy__diagram reveal" aria-label="Data flow: your browser processes the PDF and writes the signed file back to your disk. No server is involved.">
+      <div class="node node--browser">
+        <span class="node__label">Your browser</span>
+        <span class="node__sub">pdf-lib + pdfjs</span>
+      </div>
+      <div class="privacy__flow" aria-hidden="true">
+        <svg class="flow" viewBox="0 0 160 50" preserveAspectRatio="xMidYMid meet">
+          <!-- Dashed track -->
+          <line x1="8" y1="25" x2="144" y2="25" stroke="#27272A" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <!-- Arrow head -->
+          <polyline points="138,17 150,25 138,33" fill="none" stroke="#A1A1AA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Traveling PDF packet (with trail) -->
+          <g class="flow__trail">
+            <rect x="-14" y="-9" width="28" height="18" rx="2" fill="#FAFAFA" opacity="0.15"/>
+          </g>
+          <g class="flow__trail flow__trail--2">
+            <rect x="-14" y="-9" width="28" height="18" rx="2" fill="#FAFAFA" opacity="0.3"/>
+          </g>
+          <g class="flow__packet">
+            <rect x="-14" y="-9" width="28" height="18" rx="2" fill="#FAFAFA"/>
+            <text x="0" y="3" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="7" font-weight="700" fill="#B91C1C" letter-spacing="0.5">PDF</text>
+          </g>
+        </svg>
+      </div>
+      <div class="node node--file">
+        <span class="node__label">Signed PDF</span>
+        <span class="node__sub">saved to disk</span>
+      </div>
+      <div class="diagram__note">
+        <span class="dot-red"></span>
+        No server in this flow
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================== FEATURES -->
+<section class="section features" id="features">
+  <div class="container">
+    <p class="eyebrow">What's inside</p>
+    <h2 class="section__h2">Everything an everyday contract needs.</h2>
+
+    <div class="bento reveal-stagger">
+      <!-- ========== Real signatures (tall) ========== -->
+      <article class="card card--tall reveal">
+        <div class="card__copy">
+          <h3>Real signatures</h3>
+          <p>Draw with the trackpad, save to reuse, or upload a transparent PNG. Signatures are yours — stored only in your browser.</p>
+        </div>
+        <div class="card__shot card__shot--illus">
+          <svg class="illus illus--sig" viewBox="0 0 400 280" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+            <!-- Card background tint -->
+            <rect x="0" y="0" width="400" height="280" fill="#0F0F11"/>
+            <!-- Subtle grid -->
+            <g opacity="0.06" stroke="#FAFAFA" stroke-width="0.5">
+              <line x1="0" y1="210" x2="400" y2="210"/>
+              <line x1="0" y1="110" x2="400" y2="110"/>
+            </g>
+            <!-- Baseline -->
+            <line x1="40" y1="220" x2="360" y2="220" stroke="#27272A" stroke-width="1" stroke-dasharray="3 4"/>
+            <!-- Signature stroke -->
+            <path class="illus-sig__stroke"
+                  d="M 60 170 C 90 120, 130 120, 160 165 C 185 205, 220 205, 245 165 C 270 125, 305 125, 330 170"
+                  fill="none" stroke="#FAFAFA" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Mini quill tip follows the sig path tip -->
+            <g class="illus-sig__quill">
+              <rect x="-1" y="-40" width="2" height="40" fill="#E8DDC4"/>
+              <path d="M 0 -40 L -5 -28 L -3 -14 L -6 0 L 0 8" fill="#F7F2E8" opacity="0.9"/>
+              <path d="M 0 -40 L 5 -28 L 3 -14 L 6 0 L 0 8" fill="#C8BDA3" opacity="0.85"/>
+              <path d="M -1.5 -2 L 0 6 L 1.5 -2 Z" fill="#B91C1C"/>
+            </g>
+          </svg>
+        </div>
+      </article>
+
+      <!-- ========== Text that matches ========== -->
+      <article class="card reveal">
+        <div class="card__copy">
+          <h3>Text that matches the form</h3>
+          <p>5 fonts — Helvetica, Times, Courier, Roboto, Open Sans — with Cyrillic and Greek where you need it.</p>
+        </div>
+        <div class="card__shot card__shot--illus">
+          <svg class="illus illus--text" viewBox="0 0 400 200" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+            <rect x="0" y="0" width="400" height="200" fill="#0F0F11"/>
+            <!-- Font label (mono eyebrow) -->
+            <text class="illus-text__label" x="40" y="46" font-family="'JetBrains Mono', monospace" font-size="11" fill="#71717A" letter-spacing="2">FONT</text>
+            <!-- Cycling font name -->
+            <g class="illus-text__stack" transform="translate(40 90)">
+              <text class="illus-text__name" font-size="32" fill="#FAFAFA" font-weight="500" letter-spacing="-0.02em">
+                <tspan x="0" dy="0" class="illus-text__name--1" font-family="Helvetica, Arial, sans-serif">Helvetica</tspan>
+                <tspan x="0" dy="0" class="illus-text__name--2" font-family="'Times New Roman', Times, serif" font-style="italic">Times</tspan>
+                <tspan x="0" dy="0" class="illus-text__name--3" font-family="'Courier New', Courier, monospace">Courier</tspan>
+                <tspan x="0" dy="0" class="illus-text__name--4" font-family="'Roboto', Inter, sans-serif" font-weight="400">Roboto</tspan>
+                <tspan x="0" dy="0" class="illus-text__name--5" font-family="'Open Sans', Inter, sans-serif" font-weight="500">Open Sans</tspan>
+              </text>
+            </g>
+            <!-- Caret -->
+            <rect class="illus-text__caret" x="0" y="64" width="2.5" height="34" fill="#B91C1C"/>
+            <!-- Underline accent -->
+            <line x1="40" y1="130" x2="360" y2="130" stroke="#27272A" stroke-width="1"/>
+            <!-- Language hint -->
+            <text x="40" y="160" font-family="'JetBrains Mono', monospace" font-size="10" fill="#71717A" letter-spacing="1.5">LATIN · CYRILLIC · GREEK</text>
+          </svg>
+        </div>
+      </article>
+
+      <!-- ========== Form filling ========== -->
+      <article class="card reveal">
+        <div class="card__copy">
+          <h3>Form filling</h3>
+          <p>Click a field, type. Checkboxes, dates, and free text — overlaid on the existing document without altering the original.</p>
+        </div>
+        <div class="card__shot card__shot--illus">
+          <svg class="illus illus--form" viewBox="0 0 400 200" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+            <rect x="0" y="0" width="400" height="200" fill="#0F0F11"/>
+            <!-- 4 form rows -->
+            <g class="illus-form__rows">
+              <g class="illus-form__row" style="--i: 0" transform="translate(40 40)">
+                <text x="0" y="-6" font-family="'JetBrains Mono', monospace" font-size="9" fill="#71717A" letter-spacing="1">NAME</text>
+                <rect x="0" y="0" width="260" height="1" fill="#27272A"/>
+                <rect class="illus-form__fill" x="0" y="-1" width="0" height="2" fill="#FAFAFA"/>
+                <g class="illus-form__check" transform="translate(290 -4)">
+                  <circle r="8" fill="none" stroke="#B91C1C" stroke-width="1.5"/>
+                  <path d="M -3.5 0 L -1 2.5 L 3.5 -2.5" fill="none" stroke="#B91C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+              </g>
+              <g class="illus-form__row" style="--i: 1" transform="translate(40 80)">
+                <text x="0" y="-6" font-family="'JetBrains Mono', monospace" font-size="9" fill="#71717A" letter-spacing="1">EMAIL</text>
+                <rect x="0" y="0" width="260" height="1" fill="#27272A"/>
+                <rect class="illus-form__fill" x="0" y="-1" width="0" height="2" fill="#FAFAFA"/>
+                <g class="illus-form__check" transform="translate(290 -4)">
+                  <circle r="8" fill="none" stroke="#B91C1C" stroke-width="1.5"/>
+                  <path d="M -3.5 0 L -1 2.5 L 3.5 -2.5" fill="none" stroke="#B91C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+              </g>
+              <g class="illus-form__row" style="--i: 2" transform="translate(40 120)">
+                <text x="0" y="-6" font-family="'JetBrains Mono', monospace" font-size="9" fill="#71717A" letter-spacing="1">DATE</text>
+                <rect x="0" y="0" width="260" height="1" fill="#27272A"/>
+                <rect class="illus-form__fill" x="0" y="-1" width="0" height="2" fill="#FAFAFA"/>
+                <g class="illus-form__check" transform="translate(290 -4)">
+                  <circle r="8" fill="none" stroke="#B91C1C" stroke-width="1.5"/>
+                  <path d="M -3.5 0 L -1 2.5 L 3.5 -2.5" fill="none" stroke="#B91C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+              </g>
+              <g class="illus-form__row" style="--i: 3" transform="translate(40 160)">
+                <text x="0" y="-6" font-family="'JetBrains Mono', monospace" font-size="9" fill="#71717A" letter-spacing="1">SIGN</text>
+                <rect x="0" y="0" width="260" height="1" fill="#27272A"/>
+                <rect class="illus-form__fill" x="0" y="-1" width="0" height="2" fill="#FAFAFA"/>
+                <g class="illus-form__check" transform="translate(290 -4)">
+                  <circle r="8" fill="none" stroke="#B91C1C" stroke-width="1.5"/>
+                  <path d="M -3.5 0 L -1 2.5 L 3.5 -2.5" fill="none" stroke="#B91C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+              </g>
+            </g>
+          </svg>
+        </div>
+      </article>
+
+      <!-- ========== Try without signing up ========== -->
+      <article class="card reveal">
+        <div class="card__copy">
+          <h3>Try without signing up</h3>
+          <p>Open the editor, load a PDF, draw signatures and fill fields — no account needed. Sign in only at the final download step.</p>
+        </div>
+        <div class="card__shot card__shot--illus">
+          <svg class="illus illus--noauth" viewBox="0 0 400 200" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+            <rect x="0" y="0" width="400" height="200" fill="#0F0F11"/>
+
+            <!-- Dashed track connecting the three steps -->
+            <line x1="70" y1="100" x2="330" y2="100" stroke="#27272A" stroke-width="1.2" stroke-dasharray="3 4"/>
+            <!-- Progress highlight that sweeps across -->
+            <line class="illus-noauth__progress" x1="70" y1="100" x2="70" y2="100" stroke="#B91C1C" stroke-width="1.6" stroke-linecap="round"/>
+
+            <!-- Step 1: OPEN -->
+            <g class="illus-noauth__step illus-noauth__step--1" transform="translate(70 100)">
+              <circle r="20" fill="#0F0F11" stroke="#27272A" stroke-width="1.5"/>
+              <!-- Dashed document icon -->
+              <rect x="-7" y="-9" width="14" height="18" rx="1.5" fill="none" stroke="#A1A1AA" stroke-width="1.4"/>
+              <line x1="-4" y1="-4" x2="4" y2="-4" stroke="#A1A1AA" stroke-width="1.2"/>
+              <line x1="-4" y1="0"  x2="4" y2="0"  stroke="#A1A1AA" stroke-width="1.2"/>
+              <line x1="-4" y1="4"  x2="2" y2="4"  stroke="#A1A1AA" stroke-width="1.2"/>
+              <text y="40" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#A1A1AA" letter-spacing="1.5">OPEN</text>
+            </g>
+
+            <!-- Step 2: EDIT -->
+            <g class="illus-noauth__step illus-noauth__step--2" transform="translate(200 100)">
+              <circle r="20" fill="#0F0F11" stroke="#27272A" stroke-width="1.5"/>
+              <!-- Pen nib icon -->
+              <path d="M -7 7 L 2 -8 L 7 -3 L -2 12 Z" fill="none" stroke="#A1A1AA" stroke-width="1.4" stroke-linejoin="round"/>
+              <circle cx="-5" cy="10" r="1.5" fill="#A1A1AA"/>
+              <text y="40" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#A1A1AA" letter-spacing="1.5">EDIT</text>
+            </g>
+
+            <!-- Step 3: DOWNLOAD — gated by auth -->
+            <g class="illus-noauth__step illus-noauth__step--3" transform="translate(330 100)">
+              <circle class="illus-noauth__circle3" r="20" fill="#0F0F11" stroke="#B91C1C" stroke-width="1.8"/>
+              <!-- Padlock that unlocks -->
+              <g class="illus-noauth__lock">
+                <path class="illus-noauth__shackle" d="M -6 -3 A 6 6 0 0 1 6 -3 V 3" fill="none" stroke="#FAFAFA" stroke-width="1.6" stroke-linecap="round"/>
+                <rect x="-8" y="2" width="16" height="11" rx="1.5" fill="#FAFAFA"/>
+                <circle cx="0" cy="7" r="1.4" fill="#0F0F11"/>
+              </g>
+              <text y="40" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#FAFAFA" letter-spacing="1.5" font-weight="500">DOWNLOAD</text>
+            </g>
+
+            <!-- Free-use badges over Open and Edit -->
+            <g class="illus-noauth__freebadge" transform="translate(70 60)">
+              <rect x="-26" y="-10" width="52" height="18" rx="9" fill="rgba(185,28,28,0.1)" stroke="#B91C1C" stroke-width="1"/>
+              <text text-anchor="middle" y="4" font-family="'JetBrains Mono', monospace" font-size="8" fill="#B91C1C" letter-spacing="1">NO AUTH</text>
+            </g>
+            <g class="illus-noauth__freebadge illus-noauth__freebadge--2" transform="translate(200 60)">
+              <rect x="-26" y="-10" width="52" height="18" rx="9" fill="rgba(185,28,28,0.1)" stroke="#B91C1C" stroke-width="1"/>
+              <text text-anchor="middle" y="4" font-family="'JetBrains Mono', monospace" font-size="8" fill="#B91C1C" letter-spacing="1">NO AUTH</text>
+            </g>
+
+            <!-- Bottom caption -->
+            <text x="200" y="180" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#71717A" letter-spacing="2">SIGN IN ONLY TO DOWNLOAD</text>
+          </svg>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== PRICING -->
+<section class="section pricing" id="pricing">
+  <div class="container">
+    <p class="eyebrow">Pricing</p>
+    <h2 class="section__h2">Honest freemium. No credit card to start.</h2>
+
+    <div class="pricing__grid reveal-stagger">
+      <article class="plan reveal">
+        <header class="plan__head">
+          <h3>Free</h3>
+          <p class="plan__price"><span class="plan__num">$0</span></p>
+          <p class="plan__billing">forever · 1 signed file total</p>
+        </header>
+        <ul class="plan__list">
+          <li>Full editor, all fonts</li>
+          <li>Draw &amp; save signatures</li>
+          <li>Form filling &amp; text overlay</li>
+          <li>Local processing — no uploads</li>
+        </ul>
+        <a class="btn btn--ghost btn--lg btn--block" href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing_free" target="_blank" rel="noopener">
+          Install and try
+        </a>
+      </article>
+
+      <article class="plan plan--featured reveal">
+        <span class="plan__badge">Most popular</span>
+        <header class="plan__head">
+          <h3>Pro</h3>
+          <p class="plan__price">
+            <span class="plan__num">$2.99</span>
+            <span class="plan__unit">/mo</span>
+          </p>
+          <p class="plan__billing">or <span class="mono">$29.99</span> billed yearly — save 17%</p>
+        </header>
+        <ul class="plan__list">
+          <li>Unlimited signed files</li>
+          <li>Priority support from the developer</li>
+          <li>Cancel anytime · Stripe-backed</li>
+          <li>Everything in Free</li>
+        </ul>
+        <a class="btn btn--primary btn--lg btn--block" href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing_pro" target="_blank" rel="noopener">
+          Go Pro
+        </a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================= FAQ -->
+<section class="section faq" id="faq">
+  <div class="container faq__inner">
+    <p class="eyebrow">FAQ</p>
+    <h2 class="section__h2">Answers before you install.</h2>
+
+    <div class="faq__list reveal-stagger">
+      <details class="reveal">
+        <summary>Does my PDF leave my computer?</summary>
+        <p>No. Reading, editing, and signing all happen inside your browser tab using pdf-lib and pdfjs. The only thing our server stores is an anonymized counter — how many files your account has signed — so the free-tier limit can be enforced. The PDF itself, the form values, and the signature image never hit our infrastructure.</p>
+      </details>
+
+      <details class="reveal">
+        <summary>Does it work offline?</summary>
+        <p>Yes, after install. You can open the editor, load a PDF, sign, fill, and preview without a network connection. The only online moment is download — we contact our backend to verify sign-in and increment the usage counter (1-file limit on Free, unlimited on Pro).</p>
+      </details>
+
+      <details class="reveal">
+        <summary>Is this eIDAS or DocuSign equivalent?</summary>
+        <p>No. PDF Sign produces a Simple Electronic Signature (SES) under ESIGN and eIDAS — the right level for everyday leases, offers, NDAs, and internal forms. It is not eIDAS Advanced (AES) or Qualified (QES). Those require a Certificate Authority and a cryptographic time-stamp, which PDF Sign does not ship today.</p>
+      </details>
+
+      <details class="reveal">
+        <summary>Why sign in with Google?</summary>
+        <p>To make the freemium limit fair — one free signed file per Google account. Sign-in happens at download, not at open, so you can try the full editor without creating anything. We use <code>chrome.identity</code>, so you get the native Chrome account picker, not a redirect to a browser tab.</p>
+      </details>
+
+      <details class="reveal">
+        <summary>Can I cancel anytime?</summary>
+        <p>Yes. Billing runs on Stripe through ExtensionPay. You can cancel from the extension's options page at any time, no questions. Your Pro plan stays active until the end of the period you already paid for.</p>
+      </details>
+
+      <details class="reveal">
+        <summary>What file size and formats are supported?</summary>
+        <p>Any PDF up to 50 MB. Fonts available for text overlays: Helvetica, Times, Courier (Latin only), Roboto, Open Sans (Latin + Cyrillic + Greek). The signed file is written back as a standard PDF — it opens in any reader.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== FOOTER -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <img src="../assets/icon.png" alt="" width="24" height="24" />
+      <span>PDF Sign</span>
+    </div>
+    <nav class="footer__links">
+      <a href="https://molchanik.github.io/pdf-sign-extension/privacy-policy.html" target="_blank" rel="noopener">Privacy</a>
+      <a href="mailto:molchanovnik7@gmail.com">Contact</a>
+    </nav>
+    <p class="footer__meta">
+      Made by one developer. Open source under MIT.
+    </p>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<script src="script.js" defer></script>
+</body>
+</html>
