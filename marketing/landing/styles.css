@@ -552,7 +552,7 @@ code {
 
 .bento {
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: minmax(260px, auto);
   gap: 20px;
 }
@@ -573,9 +573,16 @@ code {
   transform: translateY(-2px);
 }
 
-.card--tall {
-  grid-row: span 2;
+/* Text-only card (no illustration). Centers copy vertically so the box
+   doesn't read as half-empty next to illustrated siblings. */
+.card--quiet {
+  justify-content: center;
 }
+.card--quiet .card__copy {
+  padding: 36px 32px;
+}
+.card--quiet .card__copy h3 { font-size: 22px; }
+.card--quiet .card__copy p  { font-size: 15px; }
 
 .card__copy {
   padding: 28px 28px 16px;
@@ -611,8 +618,6 @@ code {
   object-position: top center;
 }
 
-.card--tall .card__shot img { object-position: center center; }
-
 .card__shot--illus {
   display: flex;
   align-items: stretch;
@@ -623,38 +628,6 @@ code {
   width: 100%;
   height: 100%;
   display: block;
-}
-
-/* --- Signature illustration (tall card) --- */
-.illus-sig__stroke {
-  --len: 480;
-  stroke-dasharray: var(--len);
-  stroke-dashoffset: var(--len);
-  animation: illus-sig-ink 4.2s var(--ease) infinite;
-  filter: drop-shadow(0 0 4px rgba(250,250,250,0.15));
-}
-@keyframes illus-sig-ink {
-  0%   { stroke-dashoffset: var(--len); }
-  45%  { stroke-dashoffset: 0; }
-  80%  { stroke-dashoffset: 0; opacity: 1; }
-  95%  { stroke-dashoffset: 0; opacity: 0; }
-  100% { stroke-dashoffset: var(--len); opacity: 0; }
-}
-.illus-sig__quill {
-  transform-box: fill-box;
-  animation: illus-sig-quill 4.2s var(--ease) infinite;
-}
-@keyframes illus-sig-quill {
-  0%   { transform: translate(60px, 170px) rotate(-8deg); opacity: 0; }
-  5%   { opacity: 1; }
-  10%  { transform: translate(60px, 170px) rotate(-8deg); }
-  22%  { transform: translate(160px, 165px) rotate(-2deg); }
-  33%  { transform: translate(245px, 165px) rotate(-4deg); }
-  45%  { transform: translate(330px, 170px) rotate(-10deg); }
-  55%  { transform: translate(330px, 170px) rotate(-10deg); opacity: 1; }
-  65%  { transform: translate(330px, 140px) rotate(-18deg); opacity: 0.5; }
-  80%  { transform: translate(330px, 140px) rotate(-18deg); opacity: 0; }
-  100% { transform: translate(60px, 170px) rotate(-8deg); opacity: 0; }
 }
 
 /* --- Text cycling illustration --- */
@@ -780,8 +753,6 @@ code {
 
 /* Illus reduced-motion freeze */
 @media (prefers-reduced-motion: reduce) {
-  .illus-sig__stroke,
-  .illus-sig__quill,
   .illus-text__name tspan,
   .illus-text__caret,
   .illus-form__fill,
@@ -791,8 +762,6 @@ code {
   .illus-noauth__freebadge,
   .illus-noauth__shackle,
   .illus-noauth__circle3 { animation: none; }
-  .illus-sig__stroke { stroke-dashoffset: 0; }
-  .illus-sig__quill  { display: none; }
   .illus-text__name--1 { opacity: 1; }
   .illus-form__fill  { width: 200px; }
   .illus-form__check { opacity: 1; }
@@ -802,7 +771,6 @@ code {
 
 @media (max-width: 840px) {
   .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
-  .card--tall { grid-row: auto; }
   .card__shot { min-height: 200px; }
 }
 
