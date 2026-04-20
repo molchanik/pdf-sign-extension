@@ -654,9 +654,9 @@ code {
 }
 @keyframes illus-form-fill {
   0%, 5%  { width: 0; }
-  18%     { width: 200px; }
-  85%     { width: 200px; opacity: 1; }
-  95%     { width: 200px; opacity: 0; }
+  18%     { width: 260px; }
+  85%     { width: 260px; opacity: 1; }
+  95%     { width: 260px; opacity: 0; }
   100%    { width: 0; opacity: 0; }
 }
 .illus-form__check {
@@ -737,7 +737,7 @@ code {
   .illus-noauth__shackle,
   .illus-noauth__circle3 { animation: none; }
   .illus-text__name--1 { opacity: 1; }
-  .illus-form__fill  { width: 200px; }
+  .illus-form__fill  { width: 260px; }
   .illus-form__check { opacity: 1; }
   .illus-noauth__progress { stroke-dasharray: none; }
 }
