@@ -453,7 +453,7 @@ code {
 
 .privacy__box {
   position: relative;
-  padding: 44px 24px 32px;
+  padding: 36px 18px 22px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--bg);
@@ -471,41 +471,23 @@ code {
   color: var(--text-mute);
 }
 
-.privacy__flow-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.privacy__arrow {
-  flex: 1 1 30px;
-  max-width: 56px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
-.privacy__arrow svg {
+.privacy__loop {
   width: 100%;
-  height: 100%;
+  height: auto;
   display: block;
 }
 
-.node {
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  background: var(--bg-elevated);
-  text-align: center;
-  min-width: 0;
-  white-space: nowrap;
+/* Packet rides a closed loop: right edge of Disk → top arrow → Browser →
+   top arrow → Signed → return curve under → back to Disk. 6 s cycle. */
+.privacy__loop-packet {
+  offset-path: path('M 70 60 L 210 60 L 350 60 C 395 80, 395 135, 350 135 L 70 135 C 25 135, 25 80, 70 60');
+  offset-rotate: 0deg;
+  animation: privacy-loop 6s linear infinite;
+  will-change: offset-distance;
 }
-
-.node--browser { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-
-.node__label {
-  font-size: 13px;
-  font-weight: 600;
+@keyframes privacy-loop {
+  from { offset-distance: 0%; }
+  to   { offset-distance: 100%; }
 }
 
 .diagram__note {
@@ -537,6 +519,7 @@ code {
 
 @media (prefers-reduced-motion: reduce) {
   .dot-red { animation: none; }
+  .privacy__loop-packet { animation: none; offset-distance: 25%; }
 }
 
 @media (max-width: 560px) {

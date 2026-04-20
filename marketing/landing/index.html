@@ -131,32 +131,47 @@
         </p>
       </div>
 
-    <div class="privacy__diagram reveal" aria-label="Data flow: everything happens on your computer — the browser signs the PDF and writes it to your disk. No server is involved.">
+    <div class="privacy__diagram reveal" aria-label="Data flow: the PDF cycles Disk → Browser → Signed PDF → back to Disk. Nothing leaves your computer.">
       <div class="privacy__box">
         <span class="privacy__box-label">YOUR COMPUTER</span>
-        <div class="privacy__flow-row">
-          <div class="node node--browser">
-            <span class="node__label">Browser</span>
-          </div>
-          <div class="privacy__arrow" aria-hidden="true">
-            <svg viewBox="0 0 80 20" preserveAspectRatio="xMidYMid meet">
-              <line x1="2" y1="10" x2="64" y2="10" stroke="#27272A" stroke-width="1.5" stroke-dasharray="4 4"/>
-              <polyline points="58,4 70,10 58,16" fill="none" stroke="#A1A1AA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="node">
-            <span class="node__label">Signed PDF</span>
-          </div>
-          <div class="privacy__arrow" aria-hidden="true">
-            <svg viewBox="0 0 80 20" preserveAspectRatio="xMidYMid meet">
-              <line x1="2" y1="10" x2="64" y2="10" stroke="#27272A" stroke-width="1.5" stroke-dasharray="4 4"/>
-              <polyline points="58,4 70,10 58,16" fill="none" stroke="#A1A1AA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="node">
-            <span class="node__label">Disk</span>
-          </div>
-        </div>
+        <svg class="privacy__loop" viewBox="0 0 420 170" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <!-- Top dashed arrows (Disk → Browser → Signed) -->
+          <g stroke="#3A3A42" stroke-width="1.4" fill="none" stroke-dasharray="4 4">
+            <line x1="115" y1="60" x2="167" y2="60"/>
+            <line x1="253" y1="60" x2="305" y2="60"/>
+          </g>
+          <g fill="none" stroke="#A1A1AA" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="161,56 167,60 161,64"/>
+            <polyline points="299,56 305,60 299,64"/>
+          </g>
+
+          <!-- Return curve (Signed right edge → around bottom → Disk left edge) -->
+          <path d="M 390 80 C 395 125, 390 135, 350 135 L 70 135 C 30 135, 25 125, 30 80"
+                stroke="#3A3A42" stroke-width="1.4" stroke-dasharray="4 4" fill="none"/>
+          <polyline points="34,84 30,80 26,84"
+                    fill="none" stroke="#A1A1AA" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- Three nodes in a row (all same style, no static accent) -->
+          <g>
+            <rect x="30" y="40" width="80" height="40" rx="6" fill="#161616" stroke="#27272A" stroke-width="1"/>
+            <text x="70" y="65" text-anchor="middle" fill="#FAFAFA" font-size="13" font-weight="600" font-family="Inter, sans-serif">Disk</text>
+          </g>
+          <g>
+            <rect x="170" y="40" width="80" height="40" rx="6" fill="#161616" stroke="#27272A" stroke-width="1"/>
+            <text x="210" y="65" text-anchor="middle" fill="#FAFAFA" font-size="13" font-weight="600" font-family="Inter, sans-serif">Browser</text>
+          </g>
+          <g>
+            <rect x="310" y="40" width="80" height="40" rx="6" fill="#161616" stroke="#27272A" stroke-width="1"/>
+            <text x="350" y="57" text-anchor="middle" fill="#FAFAFA" font-size="11" font-weight="600" font-family="Inter, sans-serif">Signed</text>
+            <text x="350" y="71" text-anchor="middle" fill="#FAFAFA" font-size="11" font-weight="600" font-family="Inter, sans-serif">PDF</text>
+          </g>
+
+          <!-- Animated PDF packet riding the closed loop (CSS offset-path) -->
+          <g class="privacy__loop-packet">
+            <rect x="-11" y="-7" width="22" height="14" rx="2" fill="#FAFAFA"/>
+            <text x="0" y="3" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="6" font-weight="700" fill="#B91C1C" letter-spacing="0.5">PDF</text>
+          </g>
+        </svg>
       </div>
       <div class="diagram__note">
         <span class="dot-red"></span>
