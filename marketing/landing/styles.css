@@ -57,7 +57,8 @@ html, body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
+  /* No scroll-behavior: smooth — Lenis owns the scroll. Native smooth
+     scroll fights Lenis, producing the "delay then jump" feel. */
 }
 
 img { display: block; max-width: 100%; height: auto; }
@@ -1035,23 +1036,27 @@ code {
   transform: translateY(0);
 }
 
-/* ---- Bento-card specific reveal: clip-path horizontal wipe ---- */
+/* ---- Bento-card specific reveal: clip-path horizontal wipe ----
+   Chromium skips IntersectionObserver firings for elements whose clip-path
+   collapses the visible area to zero (cards never enter view → never get
+   the `.in-view` class). So: keep the default `.reveal` opacity-based hide
+   (IO observes it normally), and play the wipe as a one-shot keyframe
+   when `.in-view` lands. The opacity+transform transition from the base
+   `.reveal` rule runs alongside the wipe. */
 .bento .card.reveal {
-  opacity: 1;                              /* override default fade */
-  transform: none;                         /* override default translate */
-  clip-path: inset(0 100% 0 0);            /* start fully clipped from right */
-  transition: clip-path 0.95s var(--ease);
-  will-change: clip-path;
+  /* no overrides — inherits opacity: 0; transform: translateY(22px) */
 }
 .bento .card.reveal.in-view {
-  clip-path: inset(0 0 0 0);
+  animation: bento-wipe 0.95s var(--ease) forwards;
+}
+@keyframes bento-wipe {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bento .card.reveal,
   .bento .card.reveal.in-view {
-    clip-path: none;
-    transition: none;
+    animation: none;
   }
 }
 
