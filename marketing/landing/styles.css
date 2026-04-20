@@ -216,7 +216,9 @@ code {
   isolation: isolate;
 }
 
-/* ---- Hero image background with slow Ken-Burns zoom ---- */
+/* ---- Hero image background with slow Ken-Burns zoom ----
+   No `will-change` — the animation is infinite and keeping a permanent
+   compositor hint costs memory without a rendering win. */
 .hero__image {
   position: absolute;
   inset: 0;
@@ -225,37 +227,39 @@ code {
   object-fit: cover;
   object-position: center;
   z-index: -3;
-  will-change: transform;
-  animation: ken-burns 18s ease-in-out infinite alternate;
+  animation: ken-burns 22s ease-in-out infinite alternate;
+  transform: translateZ(0);   /* promote to own layer once, no per-frame hint */
 }
 @keyframes ken-burns {
-  from { transform: scale(1) translate(0, 0); }
-  to   { transform: scale(1.06) translate(-1%, -1.5%); }
+  from { transform: scale(1)   translate3d(0, 0, 0); }
+  to   { transform: scale(1.05) translate3d(-1%, -1.5%, 0); }
 }
 
-/* ---- Vertical dark gradient for text contrast ---- */
+/* ---- Vertical dark gradient for text contrast ----
+   Darker middle band so cherry-scarlet text reads on bright image zones. */
 .hero__gradient {
   position: absolute;
   inset: 0;
   z-index: -2;
   background:
     linear-gradient(180deg,
-      rgba(10, 10, 10, 0.55) 0%,
-      rgba(10, 10, 10, 0.35) 45%,
-      rgba(10, 10, 10, 0.85) 100%),
+      rgba(10, 10, 10, 0.65) 0%,
+      rgba(10, 10, 10, 0.55) 45%,
+      rgba(10, 10, 10, 0.88) 100%),
     radial-gradient(ellipse 60% 45% at 50% 55%, rgba(185, 28, 28, 0.18) 0%, transparent 70%);
   pointer-events: none;
 }
 
-/* ---- Film grain tile (SVG data-URL from :root --noise-url) ---- */
+/* ---- Film grain tile (SVG data-URL from :root --noise-url) ----
+   Plain opacity — no `mix-blend-mode: overlay`, which forces a full-page
+   composite every frame and is the #1 cause of scroll jank on this page. */
 .hero__grain {
   position: absolute;
   inset: 0;
   z-index: -1;
   background-image: var(--noise-url);
   background-size: 200px 200px;
-  mix-blend-mode: overlay;
-  opacity: 0.5;
+  opacity: 0.25;
   pointer-events: none;
 }
 
@@ -278,6 +282,18 @@ code {
 
 .hero__line {
   display: block;
+}
+
+.hero__h1 {
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.55), 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Brighten the accent on the photographic hero — #B91C1C cherry is
+   too dim against warm-gold zones of the Firefly image. Keeps brand
+   color in other contexts (about, FAQ) untouched. */
+.hero__h1 .accent {
+  color: #F87171;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .hero__h1 .word {
@@ -1056,9 +1072,12 @@ code {
   }
 }
 
-/* ---- Word-by-word reveal on section H2s ---- */
+/* ---- Word-by-word reveal on section H2s ----
+   `margin-right` replaces trailing-space rendering, which browsers collapse
+   between inline-block spans when there are no intervening text nodes. */
 .section__h2 .word {
   display: inline-block;
+  margin-right: 0.25em;
   opacity: 0;
   transform: translateY(14px);
   transition:

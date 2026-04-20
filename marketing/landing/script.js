@@ -5,8 +5,10 @@
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!prefersReducedMotion && typeof Lenis === 'function') {
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: 0.6,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.2,
     });
     const raf = (time) => {
       lenis.raf(time);
