@@ -477,17 +477,27 @@ code {
   display: block;
 }
 
-/* Packet rides a closed loop: right edge of Disk → top arrow → Browser →
-   top arrow → Signed → return curve under → back to Disk. 6 s cycle. */
-.privacy__loop-packet {
-  offset-path: path('M 70 60 L 210 60 L 350 60 C 395 80, 395 135, 350 135 L 70 135 C 25 135, 25 80, 70 60');
-  offset-rotate: 0deg;
-  animation: privacy-loop 6s linear infinite;
-  will-change: offset-distance;
+/* Contour pulse: each node's border glows cherry-scarlet in sequence
+   (Disk → Browser → Signed → loop). 4.5 s total cycle; each node is
+   active ~30 % of the cycle. */
+.privacy__node rect {
+  animation: privacy-pulse 4.5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
 }
-@keyframes privacy-loop {
-  from { offset-distance: 0%; }
-  to   { offset-distance: 100%; }
+.privacy__node--disk rect    { animation-delay: 0s;   }
+.privacy__node--browser rect { animation-delay: 1.5s; }
+.privacy__node--signed rect  { animation-delay: 3s;   }
+
+@keyframes privacy-pulse {
+  0%, 30%, 100% {
+    stroke: #27272A;
+    filter: none;
+  }
+  5%, 25% {
+    stroke: var(--accent);
+    filter: drop-shadow(0 0 10px var(--accent-glow));
+  }
 }
 
 .diagram__note {
@@ -519,12 +529,7 @@ code {
 
 @media (prefers-reduced-motion: reduce) {
   .dot-red { animation: none; }
-  .privacy__loop-packet { animation: none; offset-distance: 25%; }
-}
-
-@media (max-width: 560px) {
-  .privacy__flow-row { flex-direction: column; gap: 14px; }
-  .privacy__arrow { transform: rotate(90deg); max-width: none; flex: 0 0 auto; width: 70px; }
+  .privacy__node rect { animation: none; stroke: #27272A; filter: none; }
 }
 
 @media (max-width: 840px) {
