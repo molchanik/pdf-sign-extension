@@ -120,20 +120,20 @@
 
 <!-- ===================================================== PRIVACY -->
 <section class="section privacy" id="privacy">
-  <div class="container privacy__inner">
-    <div class="privacy__copy reveal">
-      <p class="eyebrow">Privacy by architecture</p>
-      <h2 class="section__h2">
-        Your PDF never leaves the browser.
-      </h2>
-      <p class="privacy__body">
-        PDF Sign reads, edits, and saves your file entirely inside the browser tab. No upload step, no temporary server copy, no third-party OCR. The only thing we touch server-side is an anonymized counter — how many files you have signed total — to enforce the free-tier limit.
-      </p>
-      <p class="privacy__note">
-        <span>We store: a sign-in identifier, how many files you've signed, and whether you're on Free or Pro.</span><br />
-        <span>We never see: the PDF content, the values you typed, or your signature image.</span>
-      </p>
-    </div>
+  <div class="container">
+    <p class="eyebrow">Privacy by architecture</p>
+    <h2 class="section__h2">Your PDF never leaves the browser.</h2>
+
+    <div class="privacy__inner">
+      <div class="privacy__copy reveal">
+        <p class="privacy__body">
+          PDF Sign reads, edits, and saves your file entirely inside the browser tab. No upload step, no temporary server copy, no third-party OCR. The only thing we touch server-side is an anonymized counter — how many files you have signed total — to enforce the free-tier limit.
+        </p>
+        <p class="privacy__note">
+          <span>We store: a sign-in identifier, how many files you've signed, and whether you're on Free or Pro.</span><br />
+          <span>We never see: the PDF content, the values you typed, or your signature image.</span>
+        </p>
+      </div>
 
     <div class="privacy__diagram reveal" aria-label="Data flow: your browser processes the PDF and writes the signed file back to your disk. No server is involved.">
       <div class="node node--browser">
@@ -167,6 +167,7 @@
         <span class="dot-red"></span>
         No server in this flow
       </div>
+    </div>
     </div>
   </div>
 </section>
