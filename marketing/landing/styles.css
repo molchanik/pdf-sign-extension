@@ -1127,3 +1127,26 @@ code {
     transition: none;
   }
 }
+
+/* ---- Word-by-word reveal on section H2s ---- */
+.section__h2 .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.6s var(--ease-soft) calc(var(--word-i, 0) * 0.055s),
+    transform 0.6s var(--ease)     calc(var(--word-i, 0) * 0.055s);
+  will-change: opacity, transform;
+}
+.section__h2.in-view .word {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section__h2 .word {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
