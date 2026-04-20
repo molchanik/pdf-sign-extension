@@ -440,72 +440,72 @@ code {
 
 .privacy__note code { color: var(--text-dim); }
 
+/* Privacy diagram:
+   Everything sits inside a single "YOUR COMPUTER" container so the eye
+   reads the flow as 'stays local'. Browser → Signed PDF → Disk, all
+   three nodes enclosed; no arrow exits the box. */
 .privacy__diagram {
   position: relative;
-  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.privacy__box {
+  position: relative;
+  padding: 44px 24px 32px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--bg);
+}
+
+.privacy__box-label {
+  position: absolute;
+  top: -9px;
+  left: 20px;
+  padding: 0 10px;
+  background: var(--bg-section);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--text-mute);
+}
+
+.privacy__flow-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.privacy__arrow {
+  flex: 1 1 30px;
+  max-width: 56px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+}
+.privacy__arrow svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .node {
-  padding: 18px 22px;
+  padding: 10px 14px;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   background: var(--bg-elevated);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 140px;
   text-align: center;
+  min-width: 0;
+  white-space: nowrap;
 }
 
 .node--browser { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-.node--file    { border-color: var(--border); }
 
 .node__label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-}
-
-.node__sub {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-mute);
-  letter-spacing: 0.02em;
-}
-
-/* Animated flow between nodes: dashed track + traveling PDF packet */
-.privacy__flow {
-  width: 160px;
-  height: 50px;
-  flex-shrink: 0;
-}
-.privacy__flow .flow {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-.flow__packet,
-.flow__trail {
-  transform-box: view-box;
-  transform: translate(8px, 25px);
-  animation: flow-travel 3.4s var(--ease) infinite;
-}
-.flow__trail   { animation-delay: -0.22s; }
-.flow__trail--2 { animation-delay: -0.11s; }
-@keyframes flow-travel {
-  0%   { transform: translate(8px, 25px)  scale(0.85); opacity: 0; }
-  12%  { opacity: 1; }
-  50%  { transform: translate(76px, 25px); }
-  85%  { opacity: 1; }
-  92%  { transform: translate(138px, 25px) scale(1); opacity: 0; }
-  100% { transform: translate(8px, 25px)   scale(0.85); opacity: 0; }
 }
 
 .diagram__note {
@@ -514,7 +514,6 @@ code {
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--text-dim);
-  margin-top: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -536,15 +535,13 @@ code {
   50%      { box-shadow: 0 0 18px var(--accent-glow), 0 0 28px var(--accent-glow); transform: scale(1.25); }
 }
 
-/* Privacy flow: reduced-motion freeze */
 @media (prefers-reduced-motion: reduce) {
-  .flow__packet,
-  .flow__trail,
-  .dot-red {
-    animation: none;
-  }
-  .flow__trail { opacity: 0; }
-  .flow__packet { transform: translate(76px, 25px); }
+  .dot-red { animation: none; }
+}
+
+@media (max-width: 560px) {
+  .privacy__flow-row { flex-direction: column; gap: 14px; }
+  .privacy__arrow { transform: rotate(90deg); max-width: none; flex: 0 0 auto; width: 70px; }
 }
 
 @media (max-width: 840px) {
