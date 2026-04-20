@@ -107,6 +107,7 @@ code {
   font-size: clamp(28px, 4vw, 44px);
   line-height: 1.1;
   max-width: 22ch;
+  text-wrap: balance;
   margin-bottom: 48px;
 }
 
