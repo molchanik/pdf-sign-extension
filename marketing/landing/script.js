@@ -43,16 +43,22 @@
   const headings = document.querySelectorAll('.section__h2');
   if (headings.length && 'IntersectionObserver' in window) {
     headings.forEach((h) => {
-      const text = h.textContent;
+      const text = h.textContent.trim();
       h.setAttribute('aria-label', text);
       h.textContent = '';
-      text.split(/\s+/).forEach((word, i) => {
-        if (!word) return;
+      const words = text.split(/\s+/).filter(Boolean);
+      words.forEach((word, i) => {
         const span = document.createElement('span');
         span.className = 'word';
         span.style.setProperty('--word-i', i);
-        span.textContent = word + ' ';
+        span.textContent = word;
         h.appendChild(span);
+        // Real text-node space between words — inline-block siblings
+        // drop internal trailing whitespace, so a sibling text node is
+        // the reliable way to get selectable + copy-pasteable spacing.
+        if (i < words.length - 1) {
+          h.appendChild(document.createTextNode(' '));
+        }
       });
     });
 

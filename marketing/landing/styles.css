@@ -106,7 +106,9 @@ code {
 .section__h2 {
   font-size: clamp(28px, 4vw, 44px);
   line-height: 1.1;
-  max-width: 22ch;
+  /* No max-width — each H2 fits on one line at desktop widths. Mobile
+     below 720px falls back to natural multi-line wrap via the fluid
+     clamp() font size. */
   text-wrap: balance;
   margin-bottom: 48px;
 }
@@ -1047,11 +1049,11 @@ code {
 }
 
 /* ---- Word-by-word reveal on section H2s ----
-   `margin-right` replaces trailing-space rendering, which browsers collapse
-   between inline-block spans when there are no intervening text nodes. */
+   Real text-node spaces sit between each `.word` span (added by script.js),
+   so copy-paste preserves the spacing. No `margin-right` here — it would
+   compound with the real space. */
 .section__h2 .word {
   display: inline-block;
-  margin-right: 0.25em;
   opacity: 0;
   transform: translateY(14px);
   transition:
