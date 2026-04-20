@@ -441,9 +441,11 @@ code {
 .privacy__note code { color: var(--text-dim); }
 
 /* Privacy diagram:
-   Everything sits inside a single "YOUR COMPUTER" container so the eye
-   reads the flow as 'stays local'. Browser → Signed PDF → Disk, all
-   three nodes enclosed; no arrow exits the box. */
+   Triangle layout with Browser at the top apex and Disk / Signed PDF at
+   the bottom corners. Dashed edges trace Disk → Browser → Signed → back
+   to Disk; each node's cherry contour pulses in that same order. All
+   three nodes sit inside the YOUR COMPUTER container; no arrow ever
+   exits the box. */
 .privacy__diagram {
   position: relative;
   display: flex;

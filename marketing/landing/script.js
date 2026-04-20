@@ -3,8 +3,9 @@
 
   // ---- Lenis smooth scroll (skipped under prefers-reduced-motion) ----
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let lenis = null;
   if (!prefersReducedMotion && typeof Lenis === 'function') {
-    const lenis = new Lenis({
+    lenis = new Lenis({
       duration: 0.6,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       wheelMultiplier: 1.0,
@@ -16,6 +17,28 @@
     };
     requestAnimationFrame(raf);
   }
+
+  // ---- In-page anchor clicks → Lenis smooth-scroll ----
+  // Native `scroll-behavior: smooth` is disabled (Lenis owns the scroll),
+  // so without this handler every nav click would hard-jump. Offset clears
+  // the sticky header so the target isn't hidden behind it.
+  const NAV_OFFSET = 56;
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (!href || href === '#') return;
+      const target = document.querySelector(href);
+      if (!target) return;
+      e.preventDefault();
+      if (lenis) {
+        lenis.scrollTo(target, { offset: -NAV_OFFSET });
+      } else {
+        const top = target.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
+        window.scrollTo({ top, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+      }
+      history.pushState(null, '', href);
+    });
+  });
 
   // ---- Scroll-reveal via IntersectionObserver ----
   const items = document.querySelectorAll('.reveal');

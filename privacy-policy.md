@@ -41,4 +41,4 @@ Your account data (email and usage count) is retained as long as you use the ext
 
 ## Contact
 
-If you have questions about this privacy policy, contact us at: molchanovnik7@gmail.com
+If you have questions about this privacy policy, contact us at: pdfsign.support@gmail.com
