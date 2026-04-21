@@ -1,0 +1,66 @@
+# PDF Sign
+
+> Chrome extension for signing, filling, and editing PDFs entirely inside the browser. Files never leave the user's computer. Free for the first signed file; Pro at $2.99/month or $29.99/year for unlimited.
+
+## Overview
+
+PDF Sign is a Chrome Web Store extension (Manifest V3) that lets users:
+
+- Draw signatures with a trackpad or mouse, save them, and reuse across documents
+- Fill PDF form fields — text, checkboxes, dates
+- Overlay text in 5 fonts (Helvetica, Times, Courier — Latin only; Roboto and Open Sans — Latin, Cyrillic, Greek)
+- Process files up to 50 MB
+- Work offline after install (except at download, which makes a single backend call to verify sign-in and increment the usage counter)
+
+All PDF reading, editing, and writing runs inside the browser tab using pdf-lib (write) and pdfjs (read). Nothing is uploaded.
+
+## Privacy
+
+The backend stores only:
+
+- A Google sign-in identifier
+- A per-account counter of signed files (enforces the free-tier limit)
+- Subscription status (Free or Pro)
+
+The backend never sees:
+
+- The PDF content
+- The values typed into forms
+- The signature image
+
+Privacy policy: https://molchanik.github.io/pdf-sign-extension/privacy-policy.html
+
+## Pricing
+
+| Plan        | Price        | Quota                                  |
+| ----------- | ------------ | -------------------------------------- |
+| Free        | $0           | 1 signed file total per Google account |
+| Pro monthly | $2.99 / mo   | Unlimited                              |
+| Pro yearly  | $29.99 / yr  | Unlimited (17% off monthly)            |
+
+Billing runs via Stripe through ExtensionPay. Users can cancel at any time from the extension options page; the Pro plan stays active until the end of the paid period.
+
+## Signature type
+
+PDF Sign produces a **Simple Electronic Signature (SES)** as recognised under ESIGN (US) and eIDAS (EU). This is the legally appropriate level for everyday leases, offers, NDAs, and internal forms.
+
+PDF Sign is NOT:
+
+- eIDAS Advanced Electronic Signature (AES)
+- eIDAS Qualified Electronic Signature (QES)
+- DocuSign, Adobe Sign, or any qualified Certificate Authority workflow
+
+Those require a Certificate Authority and a cryptographic time-stamp, which PDF Sign does not ship.
+
+## Authentication
+
+Sign-in uses `chrome.identity` with Google OAuth. Sign-in is requested only at the download step — users can open the editor, load a PDF, draw signatures, and fill fields without an account. The Google account picker is native to Chrome (no redirect to an external tab).
+
+## Install
+
+- Chrome Web Store: https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp
+- Landing page: https://pdf-sign-extension.pages.dev/landing/
+
+## Support
+
+Email: pdfsign.support@gmail.com

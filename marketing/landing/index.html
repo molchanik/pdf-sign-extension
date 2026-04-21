@@ -9,6 +9,7 @@
   <link rel="canonical" href="https://pdf-sign-extension.pages.dev/landing/" />
 
   <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="PDF Sign" />
   <meta property="og:url" content="https://pdf-sign-extension.pages.dev/landing/" />
   <meta property="og:title" content="PDF Sign — Sign PDFs in your browser. Nothing uploads." />
   <meta property="og:description" content="Chrome extension for signing, filling, and editing PDFs. All processing happens in your browser — files never leave your computer." />
@@ -29,6 +30,113 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap" />
 
   <link rel="stylesheet" href="styles.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://pdf-sign-extension.pages.dev/landing/#software",
+        "name": "PDF Sign",
+        "alternateName": "PDF Sign — Sign & Fill PDFs in Browser",
+        "description": "Chrome extension for signing, filling, and editing PDFs. All processing happens in your browser — files never leave your computer.",
+        "url": "https://pdf-sign-extension.pages.dev/landing/",
+        "applicationCategory": "BusinessApplication",
+        "applicationSubCategory": "PDF Editor",
+        "operatingSystem": "Chrome 114+",
+        "image": "https://pdf-sign-extension.pages.dev/assets/hero-quill.webp",
+        "installUrl": "https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp",
+        "downloadUrl": "https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp",
+        "featureList": [
+          "Draw signatures with trackpad or mouse, save and reuse",
+          "Fill PDF forms — text, checkboxes, dates",
+          "5 fonts (Helvetica, Times, Courier, Roboto, Open Sans) with Cyrillic and Greek support",
+          "Local processing — no server uploads, no OCR",
+          "Works offline after install",
+          "Files up to 50 MB"
+        ],
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Free",
+            "price": "0",
+            "priceCurrency": "USD",
+            "description": "1 signed file total per Google account"
+          },
+          {
+            "@type": "Offer",
+            "name": "Pro Monthly",
+            "price": "2.99",
+            "priceCurrency": "USD",
+            "description": "Unlimited signed files, billed monthly via Stripe"
+          },
+          {
+            "@type": "Offer",
+            "name": "Pro Yearly",
+            "price": "29.99",
+            "priceCurrency": "USD",
+            "description": "Unlimited signed files, billed yearly — 17% off monthly"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://pdf-sign-extension.pages.dev/landing/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Does my PDF leave my computer?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Reading, editing, and signing all happen inside your browser tab using pdf-lib and pdfjs. The only thing our server stores is an anonymized counter — how many files your account has signed — so the free-tier limit can be enforced. The PDF itself, the form values, and the signature image never hit our infrastructure."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does it work offline?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, after install. You can open the editor, load a PDF, sign, fill, and preview without a network connection. The only online moment is download — we contact our backend to verify sign-in and increment the usage counter (1-file limit on Free, unlimited on Pro)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is this eIDAS or DocuSign equivalent?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. PDF Sign produces a Simple Electronic Signature (SES) under ESIGN and eIDAS — the right level for everyday leases, offers, NDAs, and internal forms. It is not eIDAS Advanced (AES) or Qualified (QES). Those require a Certificate Authority and a cryptographic time-stamp, which PDF Sign does not ship today."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why sign in with Google?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "To make the freemium limit fair — one free signed file per Google account. Sign-in happens at download, not at open, so you can try the full editor without creating anything. We use chrome.identity, so you get the native Chrome account picker, not a redirect to a browser tab."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I cancel anytime?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Billing runs on Stripe through ExtensionPay. You can cancel from the extension's options page at any time, no questions. Your Pro plan stays active until the end of the period you already paid for."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What file size and formats are supported?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Any PDF up to 50 MB. Fonts available for text overlays: Helvetica, Times, Courier (Latin only), Roboto, Open Sans (Latin, Cyrillic, Greek). The signed file is written back as a standard PDF — it opens in any reader."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
