@@ -5,6 +5,7 @@ build/
 *.zip
 *.png
 !assets/*.png
+!marketing/assets/icon.png
 .idea/
 .claude/
 supabase/.temp/
