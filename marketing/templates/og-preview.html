@@ -5,7 +5,7 @@
 <title>PDF Sign — OG preview (1200×630)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&display=swap">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -26,15 +26,18 @@
   }
   body {
     background:
-      radial-gradient(ellipse 900px 600px at 85% 15%, rgba(227, 52, 47, 0.18), transparent 60%),
-      radial-gradient(ellipse 700px 500px at 10% 90%, rgba(227, 52, 47, 0.07), transparent 70%),
+      radial-gradient(ellipse 900px 600px at 85% 50%, rgba(227, 52, 47, 0.20), transparent 62%),
+      radial-gradient(ellipse 700px 500px at 8% 85%, rgba(227, 52, 47, 0.08), transparent 70%),
       var(--bg);
-    padding: 80px 88px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     position: relative;
+    display: grid;
+    /* brand row + flexible content row. Bottom padding keeps chips
+       well above any 2:1 crop line a social card might apply. */
+    grid-template-rows: auto 1fr;
+    padding: 56px 88px 56px;
   }
+
+  /* Brand: top-left, fixed height row */
   .brand {
     display: flex;
     align-items: center;
@@ -50,35 +53,46 @@
     font-weight: 700;
     letter-spacing: -0.3px;
   }
+
+  /* Main content: vertically centered in the flexible row */
+  .main {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    /* Leave a little room for the decorative flourish on the right */
+    max-width: 1024px;
+  }
+
   .headline {
-    font-size: 74px;
+    font-size: 76px;
     font-weight: 800;
     letter-spacing: -2.5px;
     line-height: 1.02;
   }
   .headline .accent { color: var(--red); }
-  .bottom {
+
+  .chips {
     display: flex;
-    align-items: center;
-    gap: 14px;
     flex-wrap: wrap;
+    gap: 12px;
   }
   .chip {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 20px;
+    padding: 11px 18px;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 12px;
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 600;
     color: var(--text);
     letter-spacing: -0.2px;
   }
   .chip .dot {
-    width: 9px;
-    height: 9px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: var(--red);
     box-shadow: 0 0 12px var(--red);
@@ -87,21 +101,25 @@
     background: var(--red);
     border-color: var(--red);
     color: #fff;
-    box-shadow: 0 12px 32px var(--red-glow);
+    box-shadow: 0 10px 28px var(--red-glow);
   }
-  /* Decorative signature stroke, bottom-right corner */
+
+  /* Decorative signature curl — vertically aligned with the content,
+     in the right ~25% of the canvas. Subtle, won't compete with text. */
   .flourish {
     position: absolute;
-    right: 88px;
-    top: 80px;
-    width: 220px;
-    height: 96px;
-    opacity: 0.55;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 360px;
+    height: 260px;
+    opacity: 0.22;
+    pointer-events: none;
   }
   .flourish path {
     fill: none;
     stroke: var(--red);
-    stroke-width: 3;
+    stroke-width: 2.5;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
@@ -113,22 +131,24 @@
     <span class="brand-name">PDF Sign</span>
   </div>
 
-  <!-- Decorative signature curl — evokes "sign" without being a real signature -->
-  <svg class="flourish" viewBox="0 0 220 96" aria-hidden="true">
-    <path d="M 8 64 C 30 32, 60 18, 90 38 S 140 78, 168 40 C 180 24, 196 20, 212 30" />
-    <path d="M 120 70 L 210 70" opacity="0.4" />
+  <svg class="flourish" viewBox="0 0 360 260" aria-hidden="true">
+    <path d="M 30 150 C 60 90, 110 60, 150 110 S 220 200, 260 140 C 280 100, 310 90, 340 110" />
+    <path d="M 60 190 L 320 190" opacity="0.55" />
+    <path d="M 280 80 L 330 60" opacity="0.4" />
   </svg>
 
-  <h1 class="headline">
-    Sign PDFs in your browser.<br>
-    <span class="accent">Nothing uploads.</span>
-  </h1>
+  <main class="main">
+    <h1 class="headline">
+      Sign PDFs in your browser.<br>
+      <span class="accent">Nothing uploads.</span>
+    </h1>
 
-  <div class="bottom">
-    <span class="chip primary">Chrome extension</span>
-    <span class="chip"><span class="dot"></span>1 file free</span>
-    <span class="chip"><span class="dot"></span>$2.99/mo unlimited</span>
-    <span class="chip"><span class="dot"></span>No uploads</span>
-  </div>
+    <div class="chips">
+      <span class="chip primary">Chrome extension</span>
+      <span class="chip"><span class="dot"></span>1 file free</span>
+      <span class="chip"><span class="dot"></span>$2.99/mo unlimited</span>
+      <span class="chip"><span class="dot"></span>No uploads</span>
+    </div>
+  </main>
 </body>
 </html>
