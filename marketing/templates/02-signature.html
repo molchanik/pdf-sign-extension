@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PDF Sign — Signature</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 36px;
+    padding: 56px 80px 40px;
+  }
+  .header-block {
+    text-align: center;
+    max-width: 1000px;
+  }
+  .header-block .eyebrow {
+    margin-bottom: 10px;
+  }
+  .header-block .headline {
+    font-size: 60px;
+  }
+  .header-block .subcopy {
+    font-size: 22px;
+    margin-top: 14px;
+  }
+  .shot-wrap {
+    position: relative;
+    width: 1040px;
+  }
+  .product-shot {
+    height: 460px;
+    width: 100%;
+  }
+  .product-shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .callout.save {
+    top: 255px;
+    right: -30px;
+    font-size: 18px;
+    padding: 14px 22px;
+  }
+  .callout.save::before {
+    left: -5px;
+    top: 50%;
+    margin-top: -6px;
+  }
+</style>
+</head>
+<body>
+  <div class="header-block">
+    <div class="eyebrow">Signatures</div>
+    <h1 class="headline">Draw once. <span class="accent">Reuse forever.</span></h1>
+    <p class="subcopy">Save multiple signatures. Mouse, trackpad, or touchscreen.</p>
+  </div>
+
+  <div class="shot-wrap">
+    <div class="product-shot">
+      <img src="../assets/product-signature-v2.png" alt="PDF Sign signature panel">
+    </div>
+  </div>
+</body>
+</html>

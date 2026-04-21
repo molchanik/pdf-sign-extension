@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PDF Sign — 3-step flow</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 80px 50px;
+    gap: 40px;
+  }
+
+  .header-block {
+    text-align: center;
+    max-width: 1000px;
+  }
+  .header-block .eyebrow { margin-bottom: 10px; }
+  .header-block .headline { font-size: 56px; }
+  .header-block .subcopy { font-size: 22px; margin-top: 14px; }
+
+  .steps {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr 40px 1fr;
+    align-items: start;
+    gap: 20px;
+    width: 100%;
+    max-width: 1120px;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .step-num {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .step-num .badge {
+    background: var(--red);
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 900;
+    box-shadow: 0 6px 18px var(--red-glow);
+    padding: 0;
+  }
+
+  .step-shot {
+    width: 100%;
+    height: 320px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 24px 48px -12px rgba(0, 0, 0, 0.55);
+    position: relative;
+  }
+
+  .step-shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .step.dropzone img {
+    object-position: center center;
+    transform: scale(2.2);
+    transform-origin: center;
+  }
+  .step.form img { object-position: left center; }
+  .step.done .step-shot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: #fff;
+    overflow: hidden;
+  }
+  .step.done img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    transform: scale(1.25);
+  }
+
+  .step-caption {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-align: center;
+    max-width: 260px;
+    line-height: 1.35;
+  }
+
+  .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 320px;
+    margin-top: 44px;
+    font-size: 32px;
+    color: var(--red);
+    font-weight: 900;
+    text-shadow: 0 0 14px var(--red-glow);
+  }
+</style>
+</head>
+<body>
+  <div class="header-block">
+    <div class="eyebrow">How it works</div>
+    <h1 class="headline">Three clicks. <span class="accent">One signed PDF.</span></h1>
+    <p class="subcopy">No account setup. No uploads. Start signing in under 30 seconds.</p>
+  </div>
+
+  <div class="steps">
+    <div class="step dropzone">
+      <div class="step-num"><span class="badge">1</span>Drop your PDF</div>
+      <div class="step-shot">
+        <img src="../assets/product-dropzone.png" alt="Empty PDF Sign editor with dropzone">
+      </div>
+      <div class="step-caption">Contract, NDA, invoice, rental agreement — any PDF up to 50&nbsp;MB</div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <div class="step form">
+      <div class="step-num"><span class="badge">2</span>Sign &amp; fill</div>
+      <div class="step-shot">
+        <img src="../assets/product-form-filled-edited.png" alt="Form filled with signature, date and text">
+      </div>
+      <div class="step-caption">Draw signature, add text in 5&nbsp;fonts, place anywhere on any page</div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <div class="step done">
+      <div class="step-num"><span class="badge">3</span>Download</div>
+      <div class="step-shot">
+        <img src="../assets/product-downloaded.png" alt="Downloaded confirmation modal">
+      </div>
+      <div class="step-caption">Signed PDF saved to your device — never touched a server</div>
+    </div>
+  </div>
+</body>
+</html>

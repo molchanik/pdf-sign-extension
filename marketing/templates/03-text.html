@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PDF Sign — Text & Fonts</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 30px;
+    padding: 56px 80px 40px;
+  }
+  .header-block {
+    text-align: center;
+    max-width: 1000px;
+  }
+  .header-block .eyebrow { margin-bottom: 10px; }
+  .header-block .headline { font-size: 60px; }
+  .header-block .subcopy { font-size: 22px; margin-top: 14px; }
+
+  .shot-wrap {
+    position: relative;
+    width: 1040px;
+  }
+  .product-shot {
+    height: 400px;
+    width: 100%;
+  }
+  .product-shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .fonts-strip {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin-top: 4px;
+  }
+  .font-pill {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+  .font-pill.helvetica { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+  .font-pill.times { font-family: 'Times New Roman', Times, serif; }
+  .font-pill.courier { font-family: 'Courier New', monospace; }
+  .font-pill.roboto { font-family: 'Roboto', sans-serif; }
+  .font-pill.opensans { font-family: 'Open Sans', sans-serif; }
+  .font-pill .lang {
+    color: var(--red);
+    font-weight: 700;
+    margin-left: 6px;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+  <div class="header-block">
+    <div class="eyebrow">Text &amp; Fonts</div>
+    <h1 class="headline">Fill any form. <span class="accent">5 fonts.</span></h1>
+    <p class="subcopy">Full formatting — size, color, bold, italic.</p>
+    <div class="fonts-strip">
+      <span class="font-pill helvetica">Helvetica</span>
+      <span class="font-pill times">Times</span>
+      <span class="font-pill courier">Courier</span>
+      <span class="font-pill roboto">Roboto <span class="lang">+ Cyrillic</span></span>
+      <span class="font-pill opensans">Open Sans <span class="lang">+ Greek</span></span>
+    </div>
+  </div>
+
+  <div class="shot-wrap">
+    <div class="product-shot">
+      <img src="../assets/product-text-edit.png" alt="PDF Sign text editor with italic Times font">
+    </div>
+  </div>
+</body>
+</html>
