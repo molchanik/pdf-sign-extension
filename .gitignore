@@ -6,6 +6,7 @@ build/
 *.png
 !assets/*.png
 !marketing/assets/icon.png
+!marketing/assets/og-preview.png
 .idea/
 .claude/
 supabase/.temp/
