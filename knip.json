@@ -1,0 +1,16 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "src/background.ts",
+    "src/popup.tsx",
+    "src/options.tsx",
+    "src/tabs/*.tsx",
+    "src/**/__tests__/**/*.test.{ts,tsx}",
+    "supabase/functions/*/index.ts",
+    "supabase/functions/__tests__/**/*.test.ts"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "supabase/functions/**/*.ts"
+  ]
+}

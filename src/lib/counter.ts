@@ -1,6 +1,6 @@
 import { supabase } from "./auth"
 
-export interface SignLimitResult {
+interface SignLimitResult {
   allowed: boolean
   isPro: boolean
   used: number

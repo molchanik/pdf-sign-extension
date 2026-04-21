@@ -6,18 +6,6 @@ const SUPABASE_ANON_KEY = process.env.PLASMO_PUBLIC_SUPABASE_ANON_KEY!
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 /**
- * Return Supabase user ID. Requires Google sign-in.
- * Throws if not authenticated.
- */
-export async function getUserId(): Promise<string> {
-  const { data } = await supabase.auth.getSession()
-  if (!data.session?.user?.id) {
-    throw new Error("Not authenticated")
-  }
-  return data.session.user.id
-}
-
-/**
  * Check if user is currently signed in.
  */
 export async function isAuthenticated(): Promise<boolean> {

@@ -30,7 +30,7 @@ interface TextElementInput {
 
 export type ElementInput = SignElementInput | TextElementInput
 
-export interface SignOptions {
+interface SignOptions {
   pdfBytes: ArrayBuffer
   elements: ElementInput[]
 }

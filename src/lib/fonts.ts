@@ -1,6 +1,6 @@
 import { StandardFonts } from "pdf-lib"
 
-export interface FontDef {
+interface FontDef {
   id: string
   label: string
   cssFallback: string              // CSS font-family for preview
