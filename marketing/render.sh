@@ -45,13 +45,16 @@ render 05-usecases
 # OG preview — headless Chrome's --window-size in new-headless mode
 # includes a small browser-chrome area, so a 1200,630 window produces
 # a ~1200,530 viewport (bottom-positioned elements get clipped).
-# Render into 1200,760 and crop to 1200,630 via PIL.
+# Render into 1200,760 and crop to 1200,630 via PIL, then save as JPG
+# (quality 90) — keeps file under ~150 KB for WhatsApp's 600 KB cap
+# and stays well under Twitter's 5 MB limit. A PNG of the same
+# composition is ~820 KB because the quill photo dominates.
 render_og() {
   local tpl="${ROOT_URL}/templates/og-preview.html"
   local raw="${OUT_DIR}/og-raw.png"
-  local out="${OUT_DIR}/og-preview.png"
+  local out="${OUT_DIR}/og-preview.jpg"
 
-  echo "→ Rendering og-preview.html (1200,760 → crop 1200,630)"
+  echo "→ Rendering og-preview.html (1200,760 → crop 1200,630 → JPG q90)"
   "$CHROME" \
     --headless=new \
     --disable-gpu \
@@ -65,7 +68,9 @@ render_og() {
 
   python -c "
 from PIL import Image
-Image.open('$raw').convert('RGB').crop((0, 0, 1200, 630)).save('$out', optimize=True)
+Image.open('$raw').convert('RGB').crop((0, 0, 1200, 630)).save(
+    '$out', 'JPEG', quality=90, optimize=True, progressive=True
+)
 "
   rm -f "$raw"
   if [[ -f "$out" ]]; then

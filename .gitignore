@@ -6,7 +6,7 @@ build/
 *.png
 !assets/*.png
 !marketing/assets/icon.png
-!marketing/assets/og-preview.png
+!marketing/assets/og-preview.jpg
 !marketing/assets/product-*.png
 .idea/
 .claude/
