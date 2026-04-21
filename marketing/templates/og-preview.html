@@ -2,77 +2,102 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>PDF Sign — OG preview (1200×630)</title>
+<title>PDF Sign — OG preview 1200x630</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800;900&display=swap">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #0a0a0a;
     --text: #ffffff;
-    --text-muted: #a1a1aa;
     --red: #E3342F;
-    --red-glow: rgba(227, 52, 47, 0.28);
+    --red-bright: #F55A56;
   }
+
+  /* We render in a larger Chrome window but the OG card is exactly
+     1200×630. Using a wrapper with fixed dimensions keeps the
+     composition crisp and lets us crop via PIL after the screenshot. */
   html, body {
-    width: 1200px;
-    height: 630px;
-    overflow: hidden;
-    color: var(--text);
-    font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
     font-feature-settings: 'cv11', 'ss01';
     -webkit-font-smoothing: antialiased;
   }
-  body {
-    background:
-      radial-gradient(ellipse 900px 600px at 85% 50%, rgba(227, 52, 47, 0.20), transparent 62%),
-      radial-gradient(ellipse 700px 500px at 8% 85%, rgba(227, 52, 47, 0.08), transparent 70%),
-      var(--bg);
+
+  .card {
+    width: 1200px;
+    height: 630px;
     position: relative;
-    display: grid;
-    /* brand row + flexible content row. Bottom padding keeps chips
-       well above any 2:1 crop line a social card might apply. */
-    grid-template-rows: auto 1fr;
-    padding: 56px 88px 56px;
+    overflow: hidden;
+    color: var(--text);
+    background:
+      linear-gradient(100deg,
+        rgba(8, 8, 8, 0.97) 0%,
+        rgba(10, 10, 10, 0.94) 34%,
+        rgba(10, 10, 10, 0.64) 58%,
+        rgba(10, 10, 10, 0.26) 82%,
+        rgba(10, 10, 10, 0.08) 100%),
+      url('../assets/hero-quill.webp') right center / cover no-repeat,
+      var(--bg);
   }
 
-  /* Brand: top-left, fixed height row */
+  /* Red brand-mood vignette */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 1100px 700px at 85% 40%, rgba(227, 52, 47, 0.20), transparent 60%),
+      radial-gradient(ellipse 600px 400px at 10% 15%, rgba(227, 52, 47, 0.09), transparent 65%);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: 0;
+  }
+
   .brand {
+    position: absolute;
+    top: 44px;
+    left: 64px;
+    z-index: 2;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
   }
   .brand img {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
+    width: 56px;
+    height: 56px;
+    border-radius: 13px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
   }
   .brand-name {
-    font-size: 26px;
+    font-size: 32px;
     font-weight: 700;
-    letter-spacing: -0.3px;
-  }
-
-  /* Main content: vertically centered in the flexible row */
-  .main {
-    align-self: center;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-    /* Leave a little room for the decorative flourish on the right */
-    max-width: 1024px;
+    letter-spacing: -0.4px;
   }
 
   .headline {
-    font-size: 76px;
+    position: absolute;
+    left: 64px;
+    top: 206px;
+    width: 820px;
+    z-index: 2;
+    font-size: 78px;
     font-weight: 800;
-    letter-spacing: -2.5px;
-    line-height: 1.02;
+    letter-spacing: -2.6px;
+    line-height: 1.0;
+    text-shadow: 0 4px 28px rgba(0, 0, 0, 0.6);
   }
-  .headline .accent { color: var(--red); }
+  .headline .accent { color: var(--red-bright); }
 
   .chips {
+    position: absolute;
+    left: 64px;
+    bottom: 44px;
+    width: 1070px;
+    z-index: 2;
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
@@ -81,63 +106,37 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 11px 18px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 12px 20px;
+    background: rgba(10, 10, 10, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: 12px;
-    font-size: 19px;
+    font-size: 20px;
     font-weight: 600;
     color: var(--text);
     letter-spacing: -0.2px;
+    white-space: nowrap;
   }
   .chip .dot {
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
     background: var(--red);
-    box-shadow: 0 0 12px var(--red);
+    box-shadow: 0 0 10px var(--red);
   }
   .chip.primary {
     background: var(--red);
     border-color: var(--red);
     color: #fff;
-    box-shadow: 0 10px 28px var(--red-glow);
-  }
-
-  /* Decorative signature curl — vertically aligned with the content,
-     in the right ~25% of the canvas. Subtle, won't compete with text. */
-  .flourish {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 360px;
-    height: 260px;
-    opacity: 0.22;
-    pointer-events: none;
-  }
-  .flourish path {
-    fill: none;
-    stroke: var(--red);
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
   }
 </style>
 </head>
 <body>
-  <div class="brand">
-    <img src="../assets/icon.png" alt="">
-    <span class="brand-name">PDF Sign</span>
-  </div>
+  <div class="card">
+    <div class="brand">
+      <img src="../assets/icon.png" alt="">
+      <span class="brand-name">PDF Sign</span>
+    </div>
 
-  <svg class="flourish" viewBox="0 0 360 260" aria-hidden="true">
-    <path d="M 30 150 C 60 90, 110 60, 150 110 S 220 200, 260 140 C 280 100, 310 90, 340 110" />
-    <path d="M 60 190 L 320 190" opacity="0.55" />
-    <path d="M 280 80 L 330 60" opacity="0.4" />
-  </svg>
-
-  <main class="main">
     <h1 class="headline">
       Sign PDFs in your browser.<br>
       <span class="accent">Nothing uploads.</span>
@@ -149,6 +148,6 @@
       <span class="chip"><span class="dot"></span>$2.99/mo unlimited</span>
       <span class="chip"><span class="dot"></span>No uploads</span>
     </div>
-  </main>
+  </div>
 </body>
 </html>
