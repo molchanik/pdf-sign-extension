@@ -434,7 +434,7 @@ function Editor() {
           <div className="bg-white rounded-xl p-8 max-w-sm text-center">
             <h2 className="text-lg font-bold text-gray-800 mb-2">Sign in to download</h2>
             <p className="text-sm text-gray-500 mb-6">
-              Sign in with Google to download your signed PDF. Your first document is free. After signing in, click "Sign &amp; Download" again.
+              Sign in with Google to download your signed PDF. Your first document is free.
             </p>
             {errorMsg && errorType === "general" && (
               <p className="text-sm text-red-500 mb-3">{errorMsg}</p>
@@ -447,7 +447,10 @@ function Editor() {
                   await signInWithGoogle()
                   const email = await getUserEmail()
                   setUserEmail(email)
-                  setAppState("editing")
+                  // Auth done — continue straight to signing + download.
+                  // handleSign re-reads isAuthenticated, which now returns true,
+                  // so it proceeds past the auth gate on its own.
+                  await handleSign()
                 } catch (err) {
                   setErrorMsg("Sign-in failed: " + (err instanceof Error ? err.message : String(err)))
                   setErrorType("general")
