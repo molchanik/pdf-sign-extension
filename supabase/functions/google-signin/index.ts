@@ -37,6 +37,36 @@ Deno.serve(async (req) => {
       )
     }
 
+    // Verify token audience matches one of our OAuth clients
+    const allowedAuds = (Deno.env.get("OAUTH_CLIENT_IDS") ?? "")
+      .split(",")
+      .map(s => s.trim())
+      .filter(Boolean)
+
+    if (allowedAuds.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "OAUTH_CLIENT_IDS not configured" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      )
+    }
+
+    const tokenInfoRes = await fetch(
+      `https://oauth2.googleapis.com/tokeninfo?access_token=${encodeURIComponent(google_access_token)}`
+    )
+    if (!tokenInfoRes.ok) {
+      return new Response(
+        JSON.stringify({ error: "Token info check failed" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      )
+    }
+    const { aud } = await tokenInfoRes.json()
+    if (!aud || !allowedAuds.includes(aud)) {
+      return new Response(
+        JSON.stringify({ error: "Token audience not allowed" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      )
+    }
+
     // Admin client for user management
     const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL")!,
