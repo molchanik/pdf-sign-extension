@@ -11,8 +11,9 @@ export async function checkSignLimit(): Promise<SignLimitResult> {
   const { data, error } = await supabase.functions.invoke("check-limit")
 
   if (error || !data) {
-    console.warn("check-limit failed, allowing sign:", error)
-    return { allowed: true, isPro: false, used: 0, limit: 1 }
+    throw new Error(
+      "Could not verify your usage limit. Check your connection and try again."
+    )
   }
 
   return data as SignLimitResult
@@ -22,6 +23,8 @@ export async function incrementSignCount(): Promise<void> {
   const { error } = await supabase.functions.invoke("sign-count")
 
   if (error) {
-    console.warn("sign-count increment failed:", error)
+    throw new Error(
+      "Could not record this sign on the server."
+    )
   }
 }

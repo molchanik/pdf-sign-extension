@@ -37,19 +37,17 @@ describe("checkSignLimit", () => {
     expect(result.used).toBe(1)
   })
 
-  it("returns graceful degradation on null data with no error", async () => {
-    mockInvoke.mockResolvedValue({ data: null, error: null })
-    const result = await checkSignLimit()
-    expect(result).toEqual({ allowed: true, isPro: false, used: 0, limit: 1 })
-  })
-
-  it("returns graceful degradation on network error", async () => {
+  it("throws when check-limit returns an error", async () => {
     mockInvoke.mockResolvedValue({
       data: null,
       error: new Error("Network error"),
     })
-    const result = await checkSignLimit()
-    expect(result).toEqual({ allowed: true, isPro: false, used: 0, limit: 1 })
+    await expect(checkSignLimit()).rejects.toThrow(/verify|usage|try again/i)
+  })
+
+  it("throws when check-limit returns null data", async () => {
+    mockInvoke.mockResolvedValue({ data: null, error: null })
+    await expect(checkSignLimit()).rejects.toThrow(/verify|usage|try again/i)
   })
 })
 
@@ -64,9 +62,8 @@ describe("incrementSignCount", () => {
     expect(mockInvoke).toHaveBeenCalledWith("sign-count")
   })
 
-  it("does not throw on error", async () => {
+  it("throws on invoke error", async () => {
     mockInvoke.mockResolvedValue({ data: null, error: new Error("fail") })
-    // Should not throw
-    await expect(incrementSignCount()).resolves.toBeUndefined()
+    await expect(incrementSignCount()).rejects.toThrow(/record|sign/i)
   })
 })

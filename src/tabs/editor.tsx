@@ -254,11 +254,18 @@ function Editor() {
         elements: inputs,
       })
 
-      downloadSignedPdf(signed, fileName)
+      // Increment BEFORE download so a fast user can't bypass the counter
+      // by triggering multiple signs while increments are in flight.
       if (!limitResult.isPro) {
-        await incrementSignCount()
-        setUsed(limitResult.used + 1)
+        try {
+          await incrementSignCount()
+          setUsed(limitResult.used + 1)
+        } catch (e) {
+          // Increment failure blocks download — surface the error to the user
+          throw new Error("Could not record this sign. Try again.")
+        }
       }
+      downloadSignedPdf(signed, fileName)
       setAppState("done")
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Signing failed"
