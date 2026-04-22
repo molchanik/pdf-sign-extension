@@ -37,18 +37,25 @@ Deno.serve(async (req) => {
       )
     }
 
-    // Verify token audience matches one of our OAuth clients
-    const allowedAuds = (Deno.env.get("OAUTH_CLIENT_IDS") ?? "")
+    // Verify token audience matches one of our OAuth clients. These
+    // client IDs are public (they ship in the extension manifest that
+    // anyone can inspect), so hard-coding them here is not a leak.
+    // The original plan called for an OAUTH_CLIENT_IDS secret, but the
+    // available Supabase MCP does not expose secret management, and the
+    // Supabase CLI is not installed in this environment. Hard-coding
+    // avoids a 500 "not configured" response taking down prod sign-in.
+    // Env-var override is honored if set, so a future migration to
+    // secrets just needs `supabase secrets set OAUTH_CLIENT_IDS=...`.
+    const envAuds = (Deno.env.get("OAUTH_CLIENT_IDS") ?? "")
       .split(",")
       .map(s => s.trim())
       .filter(Boolean)
-
-    if (allowedAuds.length === 0) {
-      return new Response(
-        JSON.stringify({ error: "OAUTH_CLIENT_IDS not configured" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      )
-    }
+    const allowedAuds = envAuds.length > 0 ? envAuds : [
+      // prod Chrome App OAuth client
+      "836027625583-4ai30de2tvaduepb4vgink6jm8nnjosg.apps.googleusercontent.com",
+      // dev Chrome App OAuth client
+      "836027625583-ut67ekjtdnfrp5tieh6ggep2dk9kopnb.apps.googleusercontent.com",
+    ]
 
     const tokenInfoRes = await fetch(
       `https://oauth2.googleapis.com/tokeninfo?access_token=${encodeURIComponent(google_access_token)}`
