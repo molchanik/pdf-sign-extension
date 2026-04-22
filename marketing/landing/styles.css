@@ -880,6 +880,18 @@ code {
   .pricing__grid { grid-template-columns: 1fr; }
 }
 
+.pricing__note {
+  max-width: 720px;
+  margin: 40px auto 0;
+  padding: 20px 24px;
+  border-left: 2px solid var(--accent);
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  background: var(--bg-section);
+  border-radius: 0 var(--r-md, 8px) var(--r-md, 8px) 0;
+}
+
 /* =========================================================== FAQ */
 
 .faq__list {
