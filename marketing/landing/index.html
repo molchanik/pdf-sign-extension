@@ -27,9 +27,10 @@
 
   <link rel="icon" type="image/png" href="../assets/icon.png" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <!-- Self-hosted variable fonts preloaded before stylesheet so the browser
+       has them in cache before first paint (no font-swap event in practice). -->
+  <link rel="preload" as="font" type="font/woff2" href="../assets/fonts/inter-latin-wght-normal.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="../assets/fonts/jetbrains-mono-latin-wght-normal.woff2" crossorigin />
 
   <link rel="preload" as="image" href="../assets/hero-quill-800.webp" media="(max-width: 720px)" fetchpriority="high" />
   <link rel="preload" as="image" href="../assets/hero-quill-1200.webp" media="(min-width: 721px) and (max-width: 1200px)" fetchpriority="high" />

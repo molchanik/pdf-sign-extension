@@ -11,7 +11,13 @@ const landingUrl =
   'file:///' +
   path.resolve(__dirname, '..', 'marketing', 'landing', 'index.html').replace(/\\/g, '/');
 
-const browser = await chromium.launch({ headless: true });
+// Lift web security so file:// can actually fetch the self-hosted fonts
+// (and any other cross-origin assets); otherwise the checks below run
+// against CSS-fallback metrics rather than the real WOFF2 glyphs.
+const browser = await chromium.launch({
+  headless: true,
+  args: ['--allow-file-access-from-files', '--disable-web-security'],
+});
 const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
 const page = await context.newPage();
 

@@ -4,6 +4,25 @@
    Single accent: cherry-scarlet.
    ========================================================================== */
 
+/* Self-hosted variable fonts (Latin subset, from @fontsource-variable).
+   Preloaded in index.html so the browser has the file before first paint —
+   this is what makes font-display: swap non-visible in practice (no swap
+   happens because the variable WOFF2 is already in cache). */
+@font-face {
+  font-family: 'Inter';
+  src: url('../assets/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('../assets/fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Palette */
   --bg:           #0A0A0A;

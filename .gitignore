@@ -13,3 +13,4 @@ build/
 supabase/.temp/
 docs/
 tsconfig.tsbuildinfo
+scripts/landing-font-baseline.json
