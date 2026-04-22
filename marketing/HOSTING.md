@@ -74,10 +74,10 @@ External channel → landing → CWS → install.
 
 ## Pre-flight checklist (one commit, ~10 min)
 
-- [ ] `marketing/_redirects` with `/ /landing/ 301`
-- [ ] OG + Twitter meta tags in `marketing/landing/index.html`
-- [ ] `marketing/robots.txt` (`Allow: /` + sitemap URL)
-- [ ] `marketing/sitemap.xml` (single entry for the landing)
-- [ ] Push → verify CF Pages deploy
-- [ ] Enable CF Web Analytics
-- [ ] Update CWS Developer Dashboard "Website" field
+- [x] `marketing/_redirects` with `/ /landing/ 301`
+- [x] OG + Twitter meta tags in `marketing/landing/index.html`
+- [x] `marketing/robots.txt` (`Allow: /` + sitemap URL)
+- [x] `marketing/sitemap.xml` (single entry for the landing)
+- [x] Push → verify CF Pages deploy (live at `pdf-sign-extension.pages.dev`)
+- [x] Enable CF Web Analytics (beacon injected by CF Pages at edge — confirmed in response headers)
+- [ ] Update CWS Developer Dashboard "Website" field (manual, still pending)

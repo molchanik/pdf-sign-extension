@@ -19,7 +19,7 @@ Chrome extension for signing PDF documents locally. Your file never leaves your 
 | ---------- | ------------------------------------- |
 | Framework  | Plasmo (Chrome Extension, Manifest V3) |
 | UI         | React 18, TypeScript, Tailwind CSS    |
-| PDF read   | pdfjs-dist (PDF.js)                   |
+| PDF read   | pdfjs-dist 4.10.38 (PDF.js)           |
 | PDF write  | pdf-lib + @pdf-lib/fontkit            |
 | Signatures | signature_pad                         |
 | Auth       | Supabase + chrome.identity (Google)    |
@@ -88,19 +88,34 @@ PLASMO_PUBLIC_EXTPAY_ID=your-extension-id
 
 ### Database
 
-Run the migration in Supabase SQL Editor:
+Run the migrations in Supabase SQL Editor, in order:
 
 ```bash
-# File: supabase/migrations/001_initial.sql
+# supabase/migrations/001_initial.sql        # users + sign_usage tables
+# supabase/migrations/002_rate_limit_log.sql # rate-limit log + cleanup helper
 ```
+
+### Edge Function secrets
+
+Before deploying, set the allowed Google OAuth client IDs (used by `google-signin` to verify the `aud` claim on incoming access tokens):
+
+```bash
+supabase secrets set \
+  OAUTH_CLIENT_IDS="<prod-chrome-app-client-id>,<dev-chrome-app-client-id>" \
+  --project-ref <your-project-ref>
+```
+
+Without this secret, `google-signin` fails closed with `500 OAUTH_CLIENT_IDS not configured`.
 
 ### Edge Functions
 
 ```bash
 supabase functions deploy google-signin --no-verify-jwt
-supabase functions deploy check-limit --no-verify-jwt
-supabase functions deploy sign-count --no-verify-jwt
+supabase functions deploy check-limit  --no-verify-jwt
+supabase functions deploy sign-count   --no-verify-jwt
 ```
+
+All three functions enforce per-subject rate limits (30 req/min per user for `check-limit` and `sign-count`; 10 req/min per IP for `google-signin`).
 
 ### Build
 
@@ -116,7 +131,7 @@ npm test              # Run all tests (Vitest)
 npm run test:watch    # Watch mode
 ```
 
-Covers: pdf-signer, fonts, counter, payments, edge functions (check-limit, sign-count).
+Covers: pdf-signer, pdf-renderer, fonts, counter, payments, rate-limit helper, edge functions (check-limit, sign-count, google-signin). 50 tests total.
 
 ### Load in Chrome
 
