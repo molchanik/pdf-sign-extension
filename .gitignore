@@ -10,6 +10,7 @@ build/
 !marketing/assets/product-*.png
 .idea/
 .claude/
+CLAUDE.md
 supabase/.temp/
 docs/
 tsconfig.tsbuildinfo
