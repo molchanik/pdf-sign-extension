@@ -1,8 +1,8 @@
 {
   "name": "pdf-sign-extension",
-  "displayName": "Private PDF Sign — Fill & Sign in Browser",
+  "displayName": "Private PDF Sign - Fill & Sign in Browser",
   "version": "1.1.1",
-  "description": "Sign & fill PDFs privately — draw signatures, add text, download instantly. First file free, then subscribe. Google sign-in required",
+  "description": "Sign & fill PDFs privately - draw signatures, add text, download instantly. First file free, then subscribe. Google sign-in required",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
