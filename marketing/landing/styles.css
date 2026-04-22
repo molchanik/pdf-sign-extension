@@ -180,6 +180,7 @@ code {
   display: flex;
   align-items: center;
   gap: 24px;
+  min-height: 56px;
 }
 
 .nav__brand {
@@ -280,8 +281,7 @@ code {
   margin-bottom: 28px;
   max-width: 20ch;
   margin-inline: auto;
-  font-variation-settings: "wght" 400;
-  animation: h1-weight-settle 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+  font-variation-settings: "wght" 600;
 }
 
 .hero__line {
@@ -309,10 +309,6 @@ code {
   margin-right: 0.22em;
 }
 
-@keyframes h1-weight-settle {
-  from { font-variation-settings: "wght" 400; }
-  to   { font-variation-settings: "wght" 600; }
-}
 @keyframes word-in {
   to { opacity: 1; transform: translateY(0); }
 }
@@ -1050,6 +1046,5 @@ code {
 
 @media (prefers-reduced-motion: reduce) {
   .hero__image  { animation: none; transform: none; }
-  .hero__h1     { animation: none; font-variation-settings: "wght" 600; }
   .hero__h1 .word { animation: none; opacity: 1; transform: none; }
 }
