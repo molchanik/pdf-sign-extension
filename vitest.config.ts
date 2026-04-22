@@ -8,6 +8,7 @@ export default defineConfig({
     include: [
       "src/**/__tests__/**/*.test.ts",
       "supabase/functions/__tests__/**/*.test.ts",
+      "supabase/functions/_shared/__tests__/**/*.test.ts",
     ],
   },
   resolve: {

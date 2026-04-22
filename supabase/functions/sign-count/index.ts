@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+import { enforceRateLimit, RateLimitError } from "../_shared/rate-limit.ts"
 
 Deno.serve(async (req) => {
   const corsHeaders = {
@@ -36,6 +37,23 @@ Deno.serve(async (req) => {
     }
 
     const userId = user.id
+
+    try {
+      await enforceRateLimit({
+        endpoint: "sign-count",
+        subject: userId,
+        maxPerMinute: 30,
+      })
+    } catch (e) {
+      if (e instanceof RateLimitError) {
+        return new Response(
+          JSON.stringify({ error: "Too many requests" }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        )
+      }
+      throw e
+    }
+
     const month = new Date().toISOString().slice(0, 7)
 
     const supabase = createClient(

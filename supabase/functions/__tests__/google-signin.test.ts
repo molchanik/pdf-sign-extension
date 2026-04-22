@@ -5,6 +5,11 @@ let handler: (req: Request) => Promise<Response>
 const mockFetch = vi.fn()
 vi.stubGlobal("fetch", mockFetch)
 
+vi.mock("../_shared/rate-limit.ts", () => ({
+  enforceRateLimit: vi.fn().mockResolvedValue(undefined),
+  RateLimitError: class RateLimitError extends Error {},
+}))
+
 vi.stubGlobal("Deno", {
   env: {
     get: (key: string) => ({
@@ -77,5 +82,19 @@ describe("google-signin — aud check", () => {
     expect(res.status).toBe(401)
     const body = await res.json()
     expect(body.error).toMatch(/audience|aud/i)
+  })
+
+  it("returns 429 when rate limit exceeded", async () => {
+    const { enforceRateLimit, RateLimitError } = await import("../_shared/rate-limit.ts")
+    ;(enforceRateLimit as any).mockRejectedValueOnce(
+      new RateLimitError("google-signin", "1.2.3.4")
+    )
+    const req = new Request("http://localhost/google-signin", {
+      method: "POST",
+      headers: { "x-forwarded-for": "1.2.3.4" },
+      body: JSON.stringify({ google_access_token: "any-token" }),
+    })
+    const res = await handler(req)
+    expect(res.status).toBe(429)
   })
 })

@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+import { enforceRateLimit, RateLimitError } from "../_shared/rate-limit.ts"
 
 Deno.serve(async (req) => {
   const corsHeaders = {
@@ -11,6 +12,24 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0].trim()
+      ?? "unknown"
+    try {
+      await enforceRateLimit({
+        endpoint: "google-signin",
+        subject: clientIp,
+        maxPerMinute: 10,       // tighter — anonymous
+      })
+    } catch (e) {
+      if (e instanceof RateLimitError) {
+        return new Response(
+          JSON.stringify({ error: "Too many requests" }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        )
+      }
+      throw e
+    }
+
     const { google_access_token } = await req.json()
     if (!google_access_token) {
       return new Response(

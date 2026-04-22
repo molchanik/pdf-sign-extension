@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+import { enforceRateLimit, RateLimitError } from "../_shared/rate-limit.ts"
 
 const FREE_LIMIT = 1
 
@@ -38,6 +39,22 @@ Deno.serve(async (req) => {
     }
 
     const userId = user.id
+
+    try {
+      await enforceRateLimit({
+        endpoint: "check-limit",
+        subject: userId,
+        maxPerMinute: 30,
+      })
+    } catch (e) {
+      if (e instanceof RateLimitError) {
+        return new Response(
+          JSON.stringify({ error: "Too many requests" }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        )
+      }
+      throw e
+    }
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,

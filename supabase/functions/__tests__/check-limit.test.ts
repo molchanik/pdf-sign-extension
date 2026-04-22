@@ -6,6 +6,11 @@ let handler: (req: Request) => Promise<Response>
 const mockGetUser = vi.fn()
 const mockUsageData = vi.fn<() => any[]>(() => [])
 
+vi.mock("../_shared/rate-limit.ts", () => ({
+  enforceRateLimit: vi.fn().mockResolvedValue(undefined),
+  RateLimitError: class RateLimitError extends Error {},
+}))
+
 vi.stubGlobal("Deno", {
   env: {
     get: (key: string) => ({
@@ -93,5 +98,22 @@ describe("check-limit edge function", () => {
     const req = new Request("http://localhost/check-limit", { method: "OPTIONS" })
     const res = await handler(req)
     expect(res.headers.get("Access-Control-Allow-Origin")).toBe("*")
+  })
+
+  it("returns 429 when rate limit exceeded", async () => {
+    mockGetUser.mockResolvedValue({
+      data: { user: { id: "user-1" } },
+      error: null,
+    })
+    const { enforceRateLimit, RateLimitError } = await import("../_shared/rate-limit.ts")
+    ;(enforceRateLimit as any).mockRejectedValueOnce(
+      new RateLimitError("check-limit", "user-1")
+    )
+    const req = new Request("http://localhost/check-limit", {
+      method: "POST",
+      headers: { authorization: "Bearer good-token" },
+    })
+    const res = await handler(req)
+    expect(res.status).toBe(429)
   })
 })
