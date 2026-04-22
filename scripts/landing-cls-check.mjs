@@ -63,6 +63,8 @@ const heroImg = await page.locator('img.hero__image').evaluate((img) => ({
   naturalWidth: img.naturalWidth,
   naturalHeight: img.naturalHeight,
   currentSrc: img.currentSrc,
+  srcset: img.srcset,
+  sizes: img.sizes,
 }));
 const h1Wght = await page
   .locator('.hero__h1')
