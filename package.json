@@ -16,7 +16,7 @@
     "@supabase/supabase-js": "^2.39.0",
     "extpay": "^3.1.2",
     "pdf-lib": "^1.17.1",
-    "pdfjs-dist": "^3.11.174",
+    "pdfjs-dist": "4.10.38",
     "plasmo": "^0.89.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -51,7 +51,7 @@
     "web_accessible_resources": [
       {
         "resources": [
-          "assets/pdf.worker.min.js",
+          "assets/pdf.worker.min.mjs",
           "assets/fonts/*.ttf"
         ],
         "matches": []

@@ -1,8 +1,8 @@
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf"
+import * as pdfjsLib from "pdfjs-dist"
 
 if (typeof chrome !== "undefined" && chrome.runtime?.getURL) {
   pdfjsLib.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL(
-    "assets/pdf.worker.min.js"
+    "assets/pdf.worker.min.mjs"
   )
 }
 
