@@ -39,6 +39,9 @@
   --accent-soft:  rgba(185, 28, 28, 0.12);
   --accent-glow:  rgba(185, 28, 28, 0.45);
 
+  --ok:           #16A34A;   /* tailwind green-600 — confirmation/success */
+  --ok-soft:      rgba(22, 163, 74, 0.12);
+
   /* Type */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
@@ -52,9 +55,15 @@
   /* Spacing */
   --container: 1120px;
 
-  /* Motion */
-  --ease:       cubic-bezier(0.34, 1.56, 0.64, 1);   /* spring with subtle overshoot */
-  --ease-soft:  cubic-bezier(0.22, 1, 0.36, 1);      /* non-bouncing for color/opacity */
+  /* Motion — split semantically.
+     --ease-out  : entrance (default for new elements appearing) — expo-out
+     --ease-in   : exit (elements leaving the viewport / collapsing)
+     --ease-soft : state change (color, border-color, opacity transitions on hover/focus)
+     --ease-bounce: accent only (intentional overshoot — confined to a small handful of decorative cases) */
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:     cubic-bezier(0.5, 0, 1, 0.5);
+  --ease-soft:   cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* Tiled SVG noise (subtle film grain, data-URL so no extra request) */
   --noise-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.08 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
@@ -319,13 +328,37 @@ code {
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
+/* Default (CSS-only fallback) — per-word animation as before. */
 .hero__h1 .word {
   display: inline-block;
+  margin-right: 0.22em;
+}
+
+body:not(.js-hero-chars) .hero__h1 .word {
   opacity: 0;
   transform: translateY(18px);
-  animation: word-in 0.85s var(--ease) forwards;
+  animation: word-in 0.85s var(--ease-bounce) forwards;
   animation-delay: calc(0.25s + var(--word-i, 0) * 0.08s);
-  margin-right: 0.22em;
+}
+
+/* When JS char-split runs, the word containers are static; characters animate. */
+body.js-hero-chars .hero__h1 .word {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+body.js-hero-chars .hero__h1 .char {
+  /* Display: inline (NOT inline-block) so chars stay inside the inline flow:
+     preserves kerning across char boundaries and prevents intra-word line
+     breaks. Without this, font-swap from system fallback to Inter would
+     cause the H1 to re-wrap (1 line ↔ 2 lines), producing a large CLS. */
+  display: inline;
+  opacity: 0;
+  /* Opacity-only animation — transform on inline is ineffective.
+     Trade-off: lose the per-char "rise" but keep layout stable through
+     the entire font-load + JS-init window. */
+  will-change: opacity;
 }
 
 @keyframes word-in {
@@ -354,7 +387,7 @@ code {
 .trustbar {
   border-top: 1px solid var(--border-soft);
   border-bottom: 1px solid var(--border-soft);
-  padding: 20px 0;
+  padding: 18px 0;
   background: var(--bg-section);
 }
 
@@ -362,13 +395,50 @@ code {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px 18px;
-  color: var(--text-dim);
-  font-size: 13px;
-  font-family: var(--font-mono);
+  align-items: center;
+  gap: 8px 12px;
+  /* Reserve space — three chips at one row on desktop, max two rows on mobile.
+     Prevents layout shift if SVG paint is delayed (it shouldn't be — inline). */
+  min-height: 36px;
 }
 
-.trustbar .dot { color: var(--text-mute); }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  white-space: nowrap;
+  transition: border-color 0.15s var(--ease-soft), color 0.15s var(--ease-soft);
+}
+
+.chip__icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--text-mute);
+  transition: color 0.15s var(--ease-soft);
+}
+
+.chip--link {
+  cursor: pointer;
+}
+
+.chip--link:hover {
+  border-color: var(--text-dim);
+  color: var(--text);
+}
+
+.chip--link:hover .chip__icon {
+  color: var(--accent);
+}
 
 /* =================================================== SECTION BASE */
 
@@ -495,8 +565,10 @@ code {
 }
 
 /* Contour pulse: each node's border glows cherry-scarlet in sequence
-   (Disk → Browser → Signed → loop). 4.5 s total cycle; each node is
-   active ~30 % of the cycle. */
+   (Disk → Browser → Signed → loop). The cycle conveys meaning — the data
+   keeps moving inside the client's computer, never leaving. So this is
+   exempt from the "no infinite decorative animation" rule. 4.5 s total
+   cycle; each node is active ~30 % of the cycle. */
 .privacy__node rect {
   animation: privacy-pulse 4.5s ease-in-out infinite;
   transform-box: fill-box;
@@ -512,8 +584,8 @@ code {
     filter: none;
   }
   5%, 25% {
-    stroke: var(--accent);
-    filter: drop-shadow(0 0 10px var(--accent-glow));
+    stroke: #B91C1C;
+    filter: drop-shadow(0 0 10px rgba(185, 28, 28, 0.45));
   }
 }
 
@@ -530,22 +602,7 @@ code {
   letter-spacing: 0.04em;
 }
 
-.dot-red {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent-glow);
-  animation: dot-pulse 2.2s ease-in-out infinite;
-}
-@keyframes dot-pulse {
-  0%, 100% { box-shadow: 0 0 8px var(--accent-glow); transform: scale(1); }
-  50%      { box-shadow: 0 0 18px var(--accent-glow), 0 0 28px var(--accent-glow); transform: scale(1.25); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .dot-red { animation: none; }
   .privacy__node rect { animation: none; stroke: #27272A; filter: none; }
 }
 
@@ -570,7 +627,7 @@ code {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+  transition: border-color 0.2s var(--ease-soft), transform 0.2s var(--ease-soft);
 }
 
 .card:hover {
@@ -666,7 +723,7 @@ code {
 
 /* --- Form filling illustration --- */
 .illus-form__fill {
-  animation: illus-form-fill 6s var(--ease) infinite;
+  animation: illus-form-fill 6s var(--ease-out) infinite;
   animation-delay: calc(var(--i) * 0.6s);
 }
 @keyframes illus-form-fill {
@@ -680,7 +737,7 @@ code {
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  animation: illus-form-check 6s var(--ease) infinite;
+  animation: illus-form-check 6s var(--ease-bounce) infinite;
   animation-delay: calc(var(--i) * 0.6s + 0.3s);
 }
 @keyframes illus-form-check {
@@ -696,7 +753,7 @@ code {
    line sweeps from step 1 to step 3. At the end, the padlock on step 3
    shackle briefly opens, signaling "sign-in gate". Loops every 4.4s. */
 .illus-noauth__progress {
-  animation: illus-noauth-progress 4.4s var(--ease) infinite;
+  animation: illus-noauth-progress 4.4s var(--ease-out) infinite;
 }
 @keyframes illus-noauth-progress {
   0%   { x2: 70; opacity: 0; }
@@ -714,7 +771,7 @@ code {
 .illus-noauth__ring {
   stroke: #27272A;
   stroke-width: 1.5;
-  animation: illus-noauth-step 4.4s var(--ease) infinite;
+  animation: illus-noauth-step 4.4s var(--ease-soft) infinite;
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -737,7 +794,7 @@ code {
 .illus-noauth__shackle {
   transform-box: fill-box;
   transform-origin: 50% 100%;
-  animation: illus-noauth-unlock 4.4s var(--ease) infinite;
+  animation: illus-noauth-unlock 4.4s var(--ease-out) infinite;
 }
 @keyframes illus-noauth-unlock {
   0%, 70%  { transform: rotate(0deg) translateY(0); }
@@ -789,9 +846,29 @@ code {
 
 .plan--featured {
   border-color: var(--accent);
+  /* Initial state mirrors the original static box-shadow. The breathing
+     animation drives the glow strength via box-shadow steps below. */
   box-shadow:
     0 0 0 1px var(--accent),
     0 0 60px -20px var(--accent-glow);
+  animation: plan-breathe 9s ease-in-out infinite;
+}
+
+@keyframes plan-breathe {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px var(--accent),
+      0 0 60px -20px rgba(185, 28, 28, 0.40);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px var(--accent),
+      0 0 80px -16px rgba(185, 28, 28, 0.58);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan--featured { animation: none; }
 }
 
 .plan__badge {
@@ -871,8 +948,8 @@ code {
   top: 9px;
   width: 12px;
   height: 6px;
-  border-left: 2px solid var(--accent);
-  border-bottom: 2px solid var(--accent);
+  border-left: 2px solid var(--ok);
+  border-bottom: 2px solid var(--ok);
   transform: rotate(-45deg);
 }
 
@@ -929,7 +1006,7 @@ code {
   font-family: var(--font-mono);
   font-size: 20px;
   color: var(--text-mute);
-  transition: transform 0.2s var(--ease), color 0.15s var(--ease-soft);
+  transition: transform 0.2s var(--ease-soft), color 0.15s var(--ease-soft);
 }
 
 .faq__list details[open] summary { color: var(--accent); }
@@ -993,14 +1070,205 @@ code {
   color: var(--text);
 }
 
+/* ====================================================== COMPARISON */
+
+.comparison {
+  border-top: 1px solid var(--border-soft);
+  background: var(--bg);
+}
+
+.comparison__lead {
+  font-size: 17px;
+  color: var(--text-dim);
+  max-width: 60ch;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.comparison__table-wrap {
+  max-width: 820px;
+  margin: 0 auto;
+  /* Reserve a min-height to prevent CLS while fonts load. */
+  min-height: 320px;
+}
+
+.comparison__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.comparison__table th,
+.comparison__table td {
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.comparison__table thead th {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+  text-align: center;
+}
+
+.comparison__table thead th:first-child {
+  text-align: left;
+}
+
+.comparison__table tbody th {
+  color: var(--text);
+  font-weight: 500;
+  width: 38%;
+}
+
+.comparison__table tbody td {
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.comparison__table .comparison__own {
+  background: rgba(185, 28, 28, 0.04);
+  color: var(--text);
+}
+
+.comparison__table thead th.comparison__own {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.comparison__yes {
+  color: var(--ok, #16A34A);
+  font-weight: 500;
+}
+
+.comparison__no {
+  color: var(--text-mute);
+}
+
+.comparison__footnote {
+  max-width: 720px;
+  margin: 28px auto 0;
+  padding: 0 8px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--text-mute);
+  line-height: 1.6;
+  text-align: center;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 840px) {
+  .comparison__table,
+  .comparison__table thead,
+  .comparison__table tbody,
+  .comparison__table tr,
+  .comparison__table th,
+  .comparison__table td {
+    display: block;
+  }
+
+  .comparison__table thead {
+    /* Header row is decorative on mobile — row labels do the same job */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .comparison__table tbody tr {
+    display: block;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-md);
+    background: var(--bg-section);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+
+  .comparison__table tbody th {
+    width: auto;
+    padding: 0 0 8px;
+    border: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+  }
+
+  .comparison__table tbody td {
+    padding: 6px 0;
+    border: 0;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+
+  .comparison__table tbody td::before {
+    content: attr(data-label);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--text-mute);
+  }
+
+  .comparison__table tbody td.comparison__own {
+    background: transparent;
+    font-weight: 500;
+  }
+
+  .comparison__table tbody td.comparison__own::before {
+    color: var(--accent);
+  }
+}
+
+/* ============================================== SCROLL PROGRESS */
+
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  z-index: 60;        /* above nav (z-50) */
+  pointer-events: none;
+  /* No transition — driven directly by motion.scroll() each frame. */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #scroll-progress { display: none; }
+}
+
 /* =================================================== SCROLL REVEAL */
 /* Baseline reveal: fade + slide up. IntersectionObserver adds .in-view. */
 .reveal {
   opacity: 0;
   transform: translateY(22px);
   transition:
-    opacity 0.7s var(--ease),
-    transform 0.7s var(--ease);
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
   will-change: opacity, transform;
 }
 .reveal.in-view {
@@ -1019,7 +1287,7 @@ code {
   /* no overrides — inherits opacity: 0; transform: translateY(22px) */
 }
 .bento .card.reveal.in-view {
-  animation: bento-wipe 0.95s var(--ease) forwards;
+  animation: bento-wipe 0.95s var(--ease-out) forwards;
 }
 @keyframes bento-wipe {
   from { clip-path: inset(0 100% 0 0); }
@@ -1059,7 +1327,7 @@ code {
   transform: translateY(14px);
   transition:
     opacity 0.6s var(--ease-soft) calc(var(--word-i, 0) * 0.055s),
-    transform 0.6s var(--ease)     calc(var(--word-i, 0) * 0.055s);
+    transform 0.6s var(--ease-out) calc(var(--word-i, 0) * 0.055s);
   will-change: opacity, transform;
 }
 .section__h2.in-view .word {
@@ -1078,4 +1346,5 @@ code {
 @media (prefers-reduced-motion: reduce) {
   .hero__image  { animation: none; transform: none; }
   .hero__h1 .word { animation: none; opacity: 1; transform: none; }
+  .hero__h1 .char { opacity: 1 !important; transform: none !important; }
 }
