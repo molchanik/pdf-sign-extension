@@ -15,7 +15,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const baselinePath = path.resolve(__dirname, 'landing-font-baseline.json');
 const landingUrl =
   'file:///' +
-  path.resolve(__dirname, '..', 'marketing', 'landing', 'index.html').replace(/\\/g, '/');
+  path.resolve(__dirname, '..', 'marketing', 'index.html').replace(/\\/g, '/');
 
 const mode = process.argv[2];
 if (mode !== 'baseline' && mode !== 'compare') {

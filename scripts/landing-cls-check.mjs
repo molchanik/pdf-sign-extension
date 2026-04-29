@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const landingUrl =
   'file:///' +
-  path.resolve(__dirname, '..', 'marketing', 'landing', 'index.html').replace(/\\/g, '/');
+  path.resolve(__dirname, '..', 'marketing', 'index.html').replace(/\\/g, '/');
 
 // Lift web security so file:// can actually fetch the self-hosted fonts
 // (and any other cross-origin assets); otherwise the checks below run
