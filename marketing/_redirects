@@ -1,3 +1,5 @@
 /google593b9a04574bcb71.html  /google593b9a04574bcb71.html  200
 /googleda2c3b2f6f05a74d.html  /googleda2c3b2f6f05a74d.html  200
-/  /landing/  301
+/landing/             /                                301
+/landing               /                                301
+/landing/:rest         /:rest                           301

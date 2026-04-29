@@ -1,0 +1,68 @@
+@font-face {
+  font-family: 'Inter';
+  src: url('assets/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Dark base — mirrors landing.css tokens for visual continuity */
+  --bg: #0A0A0A;
+  --bg-elevated: #161616;
+  --text: #FAFAFA;
+  --text-dim: #A1A1AA;
+  --border: #27272A;                       /* zinc-800, h2 separator */
+  --accent: #B91C1C;                       /* cherry-scarlet, brand */
+  --accent-link: #F87171;                  /* lighter cherry, ~6.8:1 on bg, AA-pass */
+  --accent-hover: #FCA5A5;
+  --accent-soft: rgba(185, 28, 28, 0.18);  /* tinted stripe on dark */
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  max-width: 680px;
+  margin: 40px auto;
+  padding: 0 20px;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+h1 { font-size: 1.6em; }
+h2 {
+  font-size: 1.3em;
+  margin-top: 2.4em;
+  border-top: 1px solid var(--border);
+  padding-top: 1.2em;
+}
+h3 { font-size: 1em; margin-top: 1.4em; }
+a {
+  color: var(--accent-link);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 1px;
+}
+a:hover {
+  color: var(--accent-hover);
+  text-decoration-thickness: 2px;
+}
+a:focus-visible {
+  outline: 2px solid var(--accent-link);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.updated { color: var(--text-dim); font-size: 0.9em; }
+.scope {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  padding: 10px 14px;
+  margin: 16px 0;
+  font-size: 0.95em;
+}
+code {
+  background: var(--bg-elevated);
+  color: var(--text);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
