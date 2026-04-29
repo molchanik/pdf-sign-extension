@@ -40,7 +40,7 @@ Your account data (email and usage count) stays as long as your account exists. 
 
 ---
 
-## On pdf-sign-extension.pages.dev
+## On safepdfsign.com
 
 ### What this website does
 
@@ -65,4 +65,4 @@ This is a static marketing page describing the PDF Sign Chrome extension. It con
 
 ## Contact
 
-Questions: [pdfsign.support@gmail.com](mailto:pdfsign.support@gmail.com)
+Questions: [support@safepdfsign.com](mailto:support@safepdfsign.com)
