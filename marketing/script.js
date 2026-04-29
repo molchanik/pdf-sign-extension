@@ -1,11 +1,12 @@
 // Module form. `type="module"` is set on the <script> tag; defer is implicit.
-// motion library is self-hosted; reproduce the bundle with:
-//   npx esbuild scripts/motion-entry.mjs \
-//     --bundle --minify --format=esm --legal-comments=none \
-//     --outfile=marketing/assets/vendor/motion-12.38.0.min.js
-// The entry stub re-exports only the 6 symbols this module imports, which
-// lets esbuild tree-shake the rest of the motion package (~45% drop).
-import { animate, scroll, inView, stagger, hover, press } from "./assets/vendor/motion-12.38.0.min.js";
+// motion library is self-hosted; rebuild via `node scripts/build-motion.mjs`,
+// which bundles scripts/motion-entry.mjs through esbuild, computes a content
+// hash, renames the output to `motion-<version>-<hash8>.min.js`, and patches
+// the import below to match. Content-hashed filenames are required because
+// Cloudflare Pages caches each Accept-Encoding variant (gzip / br) under a
+// separate key — re-deploying the same filename can leave a stale Brotli
+// variant at the edge for hours, breaking real-Chrome users.
+import { animate, scroll, inView, stagger, hover, press } from "./assets/vendor/motion-12.38.0-a5b4cc64.min.js";
 
 // ---- Reduced-motion preference (single source of truth for this module) ----
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
