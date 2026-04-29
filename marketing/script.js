@@ -1,7 +1,7 @@
 // Module form. `type="module"` is set on the <script> tag; defer is implicit.
-// motion library is imported directly from CDN — pinned version, no SRI
-// (ESM SRI is unevenly supported across browsers for transitive sub-modules).
-import { animate, scroll, inView, stagger, hover, press } from "https://cdn.jsdelivr.net/npm/motion@12.38.0/+esm";
+// motion library is self-hosted via esbuild bundle — see scripts/build-vendor.mjs
+// (or run: `npx esbuild --bundle --format=esm --minify --outfile=marketing/assets/vendor/motion-12.38.0.min.js node_modules/motion/dist/es/index.mjs`).
+import { animate, scroll, inView, stagger, hover, press } from "./assets/vendor/motion-12.38.0.min.js";
 
 // ---- Reduced-motion preference (single source of truth for this module) ----
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
