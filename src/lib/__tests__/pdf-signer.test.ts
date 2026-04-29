@@ -128,6 +128,38 @@ describe("signPdf", () => {
       .rejects.toThrow(/WinAnsi|cannot encode/)
   })
 
+  it("throws GLYPH_NOT_FOUND for Arabic with Roboto (out-of-coverage script)", async () => {
+    // Roboto-Regular.ttf as we ship it covers Latin / Cyrillic / Greek only.
+    // Without an explicit coverage check, fontkit silently emits .notdef
+    // glyphs and pdf-lib writes them out as empty boxes — the user gets a
+    // PDF that looks signed but renders unreadable in any reader. The check
+    // added in pdf-signer.ts has to surface this loudly so editor.tsx can
+    // route it to the "Script not supported" dialog.
+    const input = await createTestPdf()
+    const elements: ElementInput[] = [{
+      type: "text", pageIndex: 0,
+      x: 50, y: 50, width: 200, height: 30,
+      text: "السلام",
+      fontFamily: "Roboto",
+      fontSize: 16, color: "#000000", bold: false, italic: false,
+    }]
+    await expect(signPdf({ pdfBytes: input, elements }))
+      .rejects.toThrow(/GLYPH_NOT_FOUND: Roboto/)
+  })
+
+  it("throws GLYPH_NOT_FOUND for CJK with Open Sans", async () => {
+    const input = await createTestPdf()
+    const elements: ElementInput[] = [{
+      type: "text", pageIndex: 0,
+      x: 50, y: 50, width: 200, height: 30,
+      text: "你好",
+      fontFamily: "OpenSans",
+      fontSize: 16, color: "#000000", bold: false, italic: false,
+    }]
+    await expect(signPdf({ pdfBytes: input, elements }))
+      .rejects.toThrow(/GLYPH_NOT_FOUND: OpenSans/)
+  })
+
   it("skips elements with invalid pageIndex", async () => {
     const input = await createTestPdf(1)
     const elements: ElementInput[] = [{

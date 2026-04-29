@@ -56,6 +56,12 @@ export async function signPdf(opts: SignOptions): Promise<Uint8Array> {
 
   const pages = pdfDoc.getPages()
   const embeddedFonts = new Map<string, Awaited<ReturnType<typeof pdfDoc.embedFont>>>()
+  // Parallel cache of fontkit Font objects for embedded TTFs only. Used to
+  // pre-flight glyph coverage before drawText, since fontkit silently emits
+  // .notdef (glyph id 0) for characters outside a TTF's coverage and pdf-lib
+  // happily writes those out as empty boxes — leaving the user with a PDF
+  // that looks signed but renders unreadable text in Arabic / CJK / etc.
+  const fontkitFonts = new Map<string, ReturnType<typeof fontkit.create>>()
 
   for (const el of opts.elements) {
     if (el.pageIndex < 0 || el.pageIndex >= pages.length) continue
@@ -82,8 +88,20 @@ export async function signPdf(opts: SignOptions): Promise<Uint8Array> {
           const path = fontDef.variants[variantKey] as string
           const bytes = await loadFontBytes(path)
           embeddedFonts.set(cacheKey, await pdfDoc.embedFont(bytes))
+          fontkitFonts.set(cacheKey, fontkit.create(new Uint8Array(bytes)))
         } else {
           embeddedFonts.set(cacheKey, await pdfDoc.embedFont(StandardFonts.Helvetica))
+        }
+      }
+
+      // Embedded-TTF coverage check. Standard PDF fonts already throw a
+      // clear `WinAnsi cannot encode "X"` error inside drawText; we only
+      // need this branch for the bundled TTFs (Roboto / Open Sans).
+      const fkFont = fontkitFonts.get(cacheKey)
+      if (fkFont) {
+        const glyphs = fkFont.layout(el.text).glyphs
+        if (glyphs.some(g => g.id === 0)) {
+          throw new Error(`GLYPH_NOT_FOUND: ${el.fontFamily}`)
         }
       }
 

@@ -33,7 +33,7 @@ function Editor() {
 
   const [currentPage, setCurrentPage] = useState(1)
   const [errorMsg, setErrorMsg] = useState("")
-  const [errorType, setErrorType] = useState<"font" | "general">("general")
+  const [errorType, setErrorType] = useState<"font" | "font-noscript" | "general">("general")
 
   const [isPro, setIsPro] = useState(false)
   const [used, setUsed] = useState(0)
@@ -269,7 +269,16 @@ function Editor() {
       setAppState("done")
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Signing failed"
-      if (msg.includes("WinAnsi") || msg.includes("cannot encode")) {
+      if (msg.startsWith("GLYPH_NOT_FOUND:")) {
+        // Embedded-TTF coverage failure — the font is one we shipped (Roboto
+        // or Open Sans) but the user typed characters outside its glyph set
+        // (Arabic, CJK, Hebrew, Devanagari, etc.). The "switch to Roboto"
+        // hint used by the standard-font branch below would be misleading
+        // here, so we render a different copy.
+        const fontName = msg.slice("GLYPH_NOT_FOUND:".length).trim()
+        setErrorMsg(fontName)
+        setErrorType("font-noscript")
+      } else if (msg.includes("WinAnsi") || msg.includes("cannot encode")) {
         const usedFonts = [...new Set(
           elements.filter(el => el.type === "text").map(el => el.fontFamily)
         )]
@@ -411,6 +420,22 @@ function Editor() {
                 </p>
                 <p className="text-sm text-gray-500 mb-5">
                   Switch to <span className="font-semibold">Roboto</span> or <span className="font-semibold">Open Sans</span> for Cyrillic, Greek, and other languages.
+                </p>
+                <button onClick={() => setAppState("editing")} className="btn-primary w-full py-2">Back to editor</button>
+              </>
+            ) : errorType === "font-noscript" ? (
+              <>
+                <svg className="w-12 h-12 mx-auto mb-3" viewBox="0 0 48 48" fill="none">
+                  <path d="M24 4L44 40H4L24 4Z" fill="#FFF3E0" stroke="#FB8C00" strokeWidth="2" strokeLinejoin="round"/>
+                  <path d="M24 18V28" stroke="#FB8C00" strokeWidth="2.5" strokeLinecap="round"/>
+                  <circle cx="24" cy="33" r="1.5" fill="#FB8C00"/>
+                </svg>
+                <h2 className="text-lg font-bold text-gray-800 mb-2">Script not supported</h2>
+                <p className="text-sm text-gray-600 mb-1">
+                  <span className="font-semibold">{errorMsg}</span> covers Latin, Cyrillic, and Greek scripts.
+                </p>
+                <p className="text-sm text-gray-500 mb-5">
+                  Arabic, CJK, Hebrew, Devanagari, and other scripts aren't supported yet — try a desktop PDF tool for those.
                 </p>
                 <button onClick={() => setAppState("editing")} className="btn-primary w-full py-2">Back to editor</button>
               </>
