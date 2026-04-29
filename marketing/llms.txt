@@ -28,7 +28,7 @@ The backend never sees:
 - The values typed into forms
 - The signature image
 
-Privacy policy: https://molchanik.github.io/pdf-sign-extension/privacy-policy.html
+Privacy policy: https://safepdfsign.com/privacy
 
 ## Pricing
 
@@ -59,8 +59,8 @@ Sign-in uses `chrome.identity` with Google OAuth. Sign-in is requested only at t
 ## Install
 
 - Chrome Web Store: https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp
-- Landing page: https://pdf-sign-extension.pages.dev/landing/
+- Landing page: https://safepdfsign.com/
 
 ## Support
 
-Email: pdfsign.support@gmail.com
+Email: support@safepdfsign.com
