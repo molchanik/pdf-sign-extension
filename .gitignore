@@ -17,3 +17,4 @@ docs/
 tsconfig.tsbuildinfo
 scripts/landing-font-baseline.json
 .wrangler/
+lh-*.json

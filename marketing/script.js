@@ -1,8 +1,10 @@
 // Module form. `type="module"` is set on the <script> tag; defer is implicit.
 // motion library is self-hosted; reproduce the bundle with:
-//   npx esbuild --bundle --format=esm --minify --legal-comments=none \
-//     --outfile=marketing/assets/vendor/motion-12.38.0.min.js \
-//     node_modules/motion/dist/es/index.mjs
+//   npx esbuild scripts/motion-entry.mjs \
+//     --bundle --minify --format=esm --legal-comments=none \
+//     --outfile=marketing/assets/vendor/motion-12.38.0.min.js
+// The entry stub re-exports only the 6 symbols this module imports, which
+// lets esbuild tree-shake the rest of the motion package (~45% drop).
 import { animate, scroll, inView, stagger, hover, press } from "./assets/vendor/motion-12.38.0.min.js";
 
 // ---- Reduced-motion preference (single source of truth for this module) ----
