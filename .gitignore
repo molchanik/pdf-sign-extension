@@ -18,3 +18,4 @@ tsconfig.tsbuildinfo
 scripts/landing-font-baseline.json
 .wrangler/
 lh-*.json
+scripts/show-hn-stress/corpus/
