@@ -25,18 +25,18 @@
   <meta name="twitter:image" content="https://pdf-sign-extension.pages.dev/assets/og-preview.jpg" />
   <meta name="twitter:image:alt" content="Private PDF Sign — Fill & Sign PDFs in Your Browser. Nothing Uploads." />
 
-  <link rel="icon" type="image/png" href="../assets/icon.png" />
+  <link rel="icon" type="image/png" href="assets/icon.png" />
 
   <!-- Self-hosted variable fonts preloaded before stylesheet so the browser
        has them in cache before first paint (no font-swap event in practice). -->
-  <link rel="preload" as="font" type="font/woff2" href="../assets/fonts/inter-latin-wght-normal.woff2" crossorigin />
-  <link rel="preload" as="font" type="font/woff2" href="../assets/fonts/jetbrains-mono-latin-wght-normal.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin-wght-normal.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/jetbrains-mono-latin-wght-normal.woff2" crossorigin />
 
-  <link rel="preload" as="image" href="../assets/hero-quill-800.webp" media="(max-width: 720px)" fetchpriority="high" />
-  <link rel="preload" as="image" href="../assets/hero-quill-1200.webp" media="(min-width: 721px) and (max-width: 1200px)" fetchpriority="high" />
-  <link rel="preload" as="image" href="../assets/hero-quill.webp" media="(min-width: 1201px)" fetchpriority="high" />
+  <link rel="preload" as="image" href="assets/hero-quill-800.webp" media="(max-width: 720px)" fetchpriority="high" />
+  <link rel="preload" as="image" href="assets/hero-quill-1200.webp" media="(min-width: 721px) and (max-width: 1200px)" fetchpriority="high" />
+  <link rel="preload" as="image" href="assets/hero-quill.webp" media="(min-width: 1201px)" fetchpriority="high" />
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="landing.css" />
 
   <script type="application/ld+json">
   {
@@ -154,7 +154,7 @@
 <header class="nav">
   <div class="nav__inner">
     <a class="nav__brand" href="#top">
-      <img src="../assets/icon.png" alt="" width="28" height="28" />
+      <img src="assets/icon.png" alt="" width="28" height="28" />
       <span>PDF Sign</span>
     </a>
     <nav class="nav__links">
@@ -174,11 +174,11 @@
 <section class="hero" id="top">
   <img
     class="hero__image"
-    src="../assets/hero-quill.webp"
+    src="assets/hero-quill.webp"
     srcset="
-      ../assets/hero-quill-800.webp 800w,
-      ../assets/hero-quill-1200.webp 1200w,
-      ../assets/hero-quill.webp 1600w
+      assets/hero-quill-800.webp 800w,
+      assets/hero-quill-1200.webp 1200w,
+      assets/hero-quill.webp 1600w
     "
     sizes="100vw"
     alt="A quill pen standing in an ink bottle on a wooden desk with parchments"
@@ -643,12 +643,11 @@
 <footer class="footer">
   <div class="container footer__inner">
     <div class="footer__brand">
-      <img src="../assets/icon.png" alt="" width="24" height="24" />
+      <img src="assets/icon.png" alt="" width="24" height="24" />
       <span>PDF Sign</span>
     </div>
     <nav class="footer__links">
-      <a href="../privacy.html">Privacy (site)</a>
-      <a href="https://molchanik.github.io/pdf-sign-extension/privacy-policy.html" target="_blank" rel="noopener">Privacy (extension)</a>
+      <a href="/privacy">Privacy</a>
       <span class="footer__email">pdfsign.support@gmail.com</span>
     </nav>
     <p class="footer__meta">
@@ -657,9 +656,7 @@
   </div>
 </footer>
 
-<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"
-        integrity="sha384-O55L/6rhHr9CFvrxqv5luxOCcmVaBmETbZbJDP+Do8T0pztTACsFBD/IXCNkj7DV"
-        crossorigin="anonymous"></script>
+<script src="assets/vendor/lenis-1.1.14.min.js"></script>
 <script src="script.js" type="module"></script>
 </body>
 </html>
