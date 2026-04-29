@@ -31,14 +31,23 @@ export function FileDropzone({ onFileSelect, fullScreen = false }: Props) {
       setLoading(true)
       try {
         const arrayBuffer = await file.arrayBuffer()
-        // Use pdf-lib for page count — it works reliably in extension context
-        const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true })
+        // Load WITHOUT ignoreEncryption so password-protected PDFs are rejected
+        // at upload time. Accepting them here (which is what ignoreEncryption
+        // does) makes the page count come through but breaks the preview
+        // (pdfjs needs the password) and the sign flow (pdf-lib refuses to
+        // re-save) downstream — leaving the user staring at a blank canvas
+        // with no idea why.
+        const pdfDoc = await PDFDocument.load(arrayBuffer)
         const pages = pdfDoc.getPageCount()
         onFileSelect(file, pages, arrayBuffer)
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e)
-        console.error("PDF load error:", msg)
-        setError(`Cannot read this PDF: ${msg}`)
+        if (msg.includes("encrypted")) {
+          setError("This PDF is password-protected. Remove the password first, then try again.")
+        } else {
+          console.error("PDF load error:", msg)
+          setError(`Cannot read this PDF: ${msg}`)
+        }
       } finally {
         setLoading(false)
       }
