@@ -328,6 +328,17 @@ code {
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
+/* Stagger indices for hero words. Previously baked into HTML via
+   inline `style="--word-i:N"` attrs; moved to CSS so the page works
+   under strict CSP `style-src 'self'` (no `'unsafe-inline'`). */
+.hero__line:first-child .word:nth-child(1) { --word-i: 0; }
+.hero__line:first-child .word:nth-child(2) { --word-i: 1; }
+.hero__line:first-child .word:nth-child(3) { --word-i: 2; }
+.hero__line:first-child .word:nth-child(4) { --word-i: 3; }
+.hero__line:first-child .word:nth-child(5) { --word-i: 4; }
+.hero__line:last-child  .word:nth-child(1) { --word-i: 5; }
+.hero__line:last-child  .word:nth-child(2) { --word-i: 6; }
+
 /* Default (CSS-only fallback) — per-word animation as before. */
 .hero__h1 .word {
   display: inline-block;
@@ -722,6 +733,14 @@ body.js-hero-chars .hero__h1 .char {
 }
 
 /* --- Form filling illustration --- */
+/* Stagger indices for form rows. Previously inline `style="--i: N"`
+   on the SVG <g class="illus-form__row"> elements; moved to CSS to
+   keep CSP `style-src 'self'` clean. Children inherit --i. */
+.illus-form__rows .illus-form__row:nth-child(1) { --i: 0; }
+.illus-form__rows .illus-form__row:nth-child(2) { --i: 1; }
+.illus-form__rows .illus-form__row:nth-child(3) { --i: 2; }
+.illus-form__rows .illus-form__row:nth-child(4) { --i: 3; }
+
 .illus-form__fill {
   animation: illus-form-fill 6s var(--ease-out) infinite;
   animation-delay: calc(var(--i) * 0.6s);
