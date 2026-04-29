@@ -40,7 +40,7 @@ Your account data (email and usage count) stays as long as your account exists. 
 
 ---
 
-## On safepdfsign.com
+## On pdf-sign-extension.pages.dev
 
 ### What this website does
 
