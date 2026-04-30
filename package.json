@@ -1,8 +1,8 @@
 {
   "name": "pdf-sign-extension",
-  "displayName": "Private PDF Sign - Fill & Sign in Browser",
-  "version": "1.1.1",
-  "description": "Sign & fill PDFs privately - draw signatures, add text, download instantly. First file free, then subscribe. Google sign-in required",
+  "displayName": "Sign PDF Privately — Local, No Upload",
+  "version": "1.1.2",
+  "description": "Sign and fill PDFs locally — your files never leave the browser. Draw signatures, add text, download. Free first signature.",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
@@ -36,6 +36,7 @@
     "vitest": "^4.1.4"
   },
   "manifest": {
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvemclqRDTbm4vZcw9MhtrZUqPxg3c3pMsziVmM6DrFvjydu9Yv8iitc2u54D1mLUQr3qjwzS7Ry7YT0Eq/za/mh7k8v5FcTiya/tmCiGbnqGpXYz67P+wdVy6RPvWDRr3TheIko0r2JGHRFaZ07tfWxsLrOV98laX9UEUhmJihS1KnGmtyWDqhO9E2H3Zgi1Y+yFEkp4xnZhKVGw2EUqrFBApK0hmaLkt9IfUyYBsIl4FqyHT9B5hB0GX6HBy1vTsJm6KsjAJ8xJfuOobYVgY6aCK0bPCk8mC7wlhQ0P5KINxQY6vbDnkAG3AACkJ+A3lZZuSBrKbHeazRHfQLjHcwIDAQAB",
     "permissions": [
       "storage",
       "identity"
@@ -49,7 +50,8 @@
       ]
     },
     "host_permissions": [
-      "https://zeavnlowvyvewvysfxmj.supabase.co/*"
+      "https://zeavnlowvyvewvysfxmj.supabase.co/*",
+      "https://extensionpay.com/*"
     ],
     "web_accessible_resources": [
       {
