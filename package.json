@@ -1,8 +1,8 @@
 {
   "name": "pdf-sign-extension",
-  "displayName": "Sign PDF Privately — Local, No Upload",
+  "displayName": "Sign PDF Privately - Local, No Upload",
   "version": "1.1.2",
-  "description": "Sign and fill PDFs locally — your files never leave the browser. Draw signatures, add text, download. Free first signature.",
+  "description": "Sign and fill PDFs locally - your files never leave the browser. Draw signatures, add text, download. Free first signature.",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
