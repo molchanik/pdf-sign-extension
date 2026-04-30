@@ -249,9 +249,14 @@ code {
   isolation: isolate;
 }
 
-/* ---- Hero image background with slow Ken-Burns zoom ----
-   No `will-change` — the animation is infinite and keeping a permanent
-   compositor hint costs memory without a rendering win. */
+/* ---- Hero image background ----
+   The Ken-Burns animation that previously lived here was removed in
+   2026-04-30: its infinite alternating transform compounded with the
+   browser's scroll-induced transform on the same composited layer,
+   producing perceptible image-jitter during scroll on lower-tier
+   hardware. The static image still composites on its own layer
+   (translateZ promotion), so scroll itself is GPU-only — no per-frame
+   paint, no per-frame composite work. */
 .hero__image {
   position: absolute;
   inset: 0;
@@ -260,12 +265,7 @@ code {
   object-fit: cover;
   object-position: center;
   z-index: -3;
-  animation: ken-burns 22s ease-in-out infinite alternate;
-  transform: translateZ(0);   /* promote to own layer once, no per-frame hint */
-}
-@keyframes ken-burns {
-  from { transform: scale(1)   translate3d(0, 0, 0); }
-  to   { transform: scale(1.05) translate3d(-1%, -1.5%, 0); }
+  transform: translateZ(0);   /* promote to own layer; static thereafter */
 }
 
 /* ---- Vertical dark gradient for text contrast ----
@@ -368,8 +368,13 @@ body.js-hero-chars .hero__h1 .char {
   opacity: 0;
   /* Opacity-only animation — transform on inline is ineffective.
      Trade-off: lose the per-char "rise" but keep layout stable through
-     the entire font-load + JS-init window. */
-  will-change: opacity;
+     the entire font-load + JS-init window.
+     `will-change` intentionally omitted: the hero h1 has ~30 chars and
+     leaving a permanent compositor hint on each one promotes every
+     char to its own layer for the lifetime of the page (the reveal
+     animation finishes in <1s but the hint stays). Browser auto-hints
+     opacity transitions; the manual hint was costing GPU memory and
+     scroll smoothness more than it bought. */
 }
 
 @keyframes word-in {
@@ -1327,14 +1332,19 @@ body.js-hero-chars .hero__h1 .char {
 }
 
 /* =================================================== SCROLL REVEAL */
-/* Baseline reveal: fade + slide up. IntersectionObserver adds .in-view. */
+/* Baseline reveal: fade + slide up. IntersectionObserver adds .in-view.
+   `will-change` is intentionally NOT applied here — it would promote every
+   .reveal element to a permanent compositor layer (and there are many on
+   this page), bloating GPU memory and causing scroll jitter on lower-tier
+   hardware. Modern browsers auto-hint compositor for transform / opacity
+   transitions; manual will-change would only suppress that auto-cleanup
+   after the transition completes. */
 .reveal {
   opacity: 0;
   transform: translateY(22px);
   transition:
     opacity 0.7s var(--ease-out),
     transform 0.7s var(--ease-out);
-  will-change: opacity, transform;
 }
 .reveal.in-view {
   opacity: 1;
@@ -1393,7 +1403,11 @@ body.js-hero-chars .hero__h1 .char {
   transition:
     opacity 0.6s var(--ease-soft) calc(var(--word-i, 0) * 0.055s),
     transform 0.6s var(--ease-out) calc(var(--word-i, 0) * 0.055s);
-  will-change: opacity, transform;
+  /* `will-change` intentionally omitted — same reasoning as `.reveal`
+     and `.hero__h1 .char`: a permanent hint per word across every
+     section (~25-30 elements) created persistent compositor layers
+     that hurt scroll smoothness on lower-tier hardware. Auto-promotion
+     during the transition is sufficient. */
 }
 .section__h2.in-view .word {
   opacity: 1;
@@ -1409,7 +1423,9 @@ body.js-hero-chars .hero__h1 .char {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__image  { animation: none; transform: none; }
+  /* .hero__image animation already removed for everyone; keep transform
+     reset here as a no-op safety net for future reintroductions. */
+  .hero__image  { transform: none; }
   .hero__h1 .word { animation: none; opacity: 1; transform: none; }
   .hero__h1 .char { opacity: 1 !important; transform: none !important; }
 }
