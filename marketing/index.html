@@ -32,9 +32,11 @@
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin-wght-normal.woff2" crossorigin />
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/jetbrains-mono-latin-wght-normal.woff2" crossorigin />
 
-  <link rel="preload" as="image" href="assets/hero-quill-800.webp" media="(max-width: 720px)" fetchpriority="high" />
-  <link rel="preload" as="image" href="assets/hero-quill-1200.webp" media="(min-width: 721px) and (max-width: 1200px)" fetchpriority="high" />
-  <link rel="preload" as="image" href="assets/hero-quill.webp" media="(min-width: 1201px)" fetchpriority="high" />
+  <link rel="preload" as="image"
+        href="assets/hero-quill-1200.webp"
+        imagesrcset="assets/hero-quill-800.webp 800w, assets/hero-quill-1200.webp 1200w, assets/hero-quill.webp 1600w"
+        imagesizes="100vw"
+        fetchpriority="high" />
 
   <link rel="stylesheet" href="landing.css" />
 
