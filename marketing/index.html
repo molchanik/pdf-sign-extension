@@ -38,6 +38,11 @@
         imagesizes="100vw"
         fetchpriority="high" />
 
+  <!-- Privacy-first self-hosted analytics (Umami) — no cookies, no fingerprinting -->
+  <script async defer
+          src="https://analytics.safepdfsign.com/script.js"
+          data-website-id="UMAMI_WEBSITE_ID_FROM_TASK_2"></script>
+
   <link rel="stylesheet" href="landing.css" />
 
   <script type="application/ld+json">
@@ -167,7 +172,7 @@
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <a class="btn btn--primary btn--sm" href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing" target="_blank" rel="noopener">
+    <a class="btn btn--primary btn--sm" href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing" target="_blank" rel="noopener" data-umami-event="add-to-chrome" data-umami-event-source="nav">
       Add to Chrome
     </a>
   </div>
@@ -211,7 +216,7 @@
       Sign and fill PDFs in one tab. Your file never leaves the browser — auditable in DevTools. First PDF free, $2.99/mo for unlimited.
     </p>
     <div class="hero__cta">
-      <a class="btn btn--primary btn--lg" href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing" target="_blank" rel="noopener">
+      <a class="btn btn--primary btn--lg" href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing" target="_blank" rel="noopener" data-umami-event="add-to-chrome" data-umami-event-source="hero">
         Add to Chrome — first PDF free
       </a>
       <a class="btn btn--ghost btn--lg" href="#demo">
@@ -237,7 +242,7 @@
         height="800">
         <source src="assets/pdf-sign-demo.mp4" type="video/mp4" />
         Your browser does not support inline video.
-        <a href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing-demo-fallback">
+        <a href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing-demo-fallback" data-umami-event="add-to-chrome" data-umami-event-source="demo-fallback">
           Install from the Chrome Web Store
         </a>
         to try it directly.
@@ -594,7 +599,7 @@
           <li>Form filling &amp; text overlay</li>
           <li>Local processing — no uploads</li>
         </ul>
-        <a class="btn btn--ghost btn--lg btn--block" href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing_free" target="_blank" rel="noopener">
+        <a class="btn btn--ghost btn--lg btn--block" href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing_free" target="_blank" rel="noopener" data-umami-event="add-to-chrome" data-umami-event-source="free-tier">
           Install and try
         </a>
       </article>
@@ -615,7 +620,7 @@
           <li>Cancel anytime · Stripe-backed</li>
           <li>Everything in Free</li>
         </ul>
-        <a class="btn btn--primary btn--lg btn--block" href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing_pro" target="_blank" rel="noopener">
+        <a class="btn btn--primary btn--lg btn--block" href="https://chromewebstore.google.com/detail/jeaailkfagoabacaflpdhppafmabonmp?utm_source=landing_pro" target="_blank" rel="noopener" data-umami-event="add-to-chrome" data-umami-event-source="pro-tier">
           Go Pro
         </a>
       </article>
